@@ -16,10 +16,10 @@ Escolhemos solucionar um desafio da área de Tecnologia da Informação proposto
 Desenvolver um sistema web intuitivo que permita a gestão centralizada do ciclo de vida dos produtos, garantindo o versionamento seguro das receitas, controle de acesso de usuários e a geração de indicadores (dashboards e relatórios em PDF/Excel) para facilitar a tomada de decisão.
 
 ## Tecnologias e Recursos
-* **Linguagem / Framework Front-end:** Javascripth, CSS, HTML
-* **Linguagem / Framework Back-end:** JAVA
+* **Linguagem / Framework Front-end:** Javascript, CSS, HTML
+* **Linguagem / Framework Back-end:** Java, Spring Boot e API rest
 * **Banco de Dados:** Mysql
-* **Ferramentas Adicionais:** Trello, Brmodelo
+* **Ferramentas Adicionais:** Trello, Brmodelo, Postman
 
 ## Equipe do Projeto
 * **Leandro Gonçalves:** Gerente do Projeto e Documentação
