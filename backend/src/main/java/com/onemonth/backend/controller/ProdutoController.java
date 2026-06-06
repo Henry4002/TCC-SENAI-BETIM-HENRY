@@ -10,6 +10,7 @@ import java.util.List;
 
 
 @RestController
+@RequestMapping("/produtos")
 public class ProdutoController {
 
     private final ProdutoService service;
@@ -18,12 +19,12 @@ public class ProdutoController {
         this.service = service;
     }
 
-    @GetMapping("/produtos")
+    @GetMapping
     public List<Produto> listarProdutos(){
         return  service.listarProdutos();
     }
 
-    @GetMapping("/produtos/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
 
         Produto produto = service.buscarPorId(id);
@@ -31,21 +32,12 @@ public class ProdutoController {
 
     }
 
-    @PostMapping("/produtos")
+    @PostMapping
     public Produto cadastrarProduto(@RequestBody Produto produto){
         return service.cadastrarProduto(produto);
     }
 
-
-    @DeleteMapping("/produtos/{id}")
-    public ResponseEntity<Void> deletarProduto(@PathVariable Long id){
-
-        service.deletarProduto(id);
-        return ResponseEntity.noContent().build();
-
-    }
-
-    @PutMapping("/produtos/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @RequestBody Produto produtoAtualizado){
 
         produtoAtualizado.setId(id);
@@ -53,6 +45,14 @@ public class ProdutoController {
         Produto produto = service.atualizarProduto(produtoAtualizado);
 
         return ResponseEntity.ok(produto);
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarProduto(@PathVariable Long id){
+
+        service.deletarProduto(id);
+        return ResponseEntity.noContent().build();
 
     }
 }

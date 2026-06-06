@@ -32,14 +32,14 @@ public class ProdutoService {
         }
     }
 
-    public List<Produto> listarProdutos(){
-        return repository.findAll();
-    }
-
     public Produto cadastrarProduto(Produto produto){
         validarProduto(produto);
 
         return repository.save(produto);
+    }
+
+    public List<Produto> listarProdutos(){
+        return repository.findAll();
     }
 
     public Produto buscarPorId(Long id){
@@ -52,13 +52,6 @@ public class ProdutoService {
         throw new IllegalArgumentException("Produto não encontrado");
     }
 
-    public void deletarProduto(Long id){
-
-        validarExistenciaProduto(id);
-
-        repository.deleteById(id);
-    }
-
     public Produto atualizarProduto (Produto produto){
 
         validarProduto(produto);
@@ -66,6 +59,13 @@ public class ProdutoService {
         validarExistenciaProduto(produto.getId());
 
         return repository.save(produto);
+    }
+
+    public void deletarProduto(Long id){
+
+        validarExistenciaProduto(id);
+
+        repository.deleteById(id);
     }
 
 }
