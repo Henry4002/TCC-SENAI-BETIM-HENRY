@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OneMonth - Cadastro</title>
+
+    <link rel="stylesheet" href="../css/cadastro.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="imagem">
+            <h1>OneMonth</h1>
+        </div>
+
+        <div class="cadastro">
+
+            <div class="card">
+
+                <h2>Cadastro</h2>
+
+                <label for="nome">Nome Completo</label>
+                <div class="campo">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="nome" placeholder="Digite seu nome">
+                </div>
+
+                <label for="email">E-mail</label>
+                <div class="campo">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Digite seu e-mail">
+                </div>
+
+                <label for="usuario">Usuário</label>
+                <div class="campo">
+                    <i class="fa-solid fa-id-card"></i>
+                    <input type="text" id="usuario" placeholder="Digite seu usuário">
+                </div>
+
+                <label for="senha">Senha</label>
+                <div class="campo">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="senha" placeholder="Digite sua senha">
+                </div>
+
+                <label for="confirmarSenha">Confirmar Senha</label>
+                <div class="campo">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="confirmarSenha" placeholder="Confirme sua senha">
+                </div>
+                <label>Tipo de usuário</label>
+
+                <div class="tipoUsuario">
+
+                <label class="opcao">
+                <input type="radio" name="tipoUsuario" value="admin">
+                    Administrador
+                </label>
+
+                <label class="opcao">
+                <input type="radio" name="tipoUsuario" value="funcionario">
+                    Funcionário
+                </label></div>
+                <button id="btnCadastrar">
+                    Cadastrar
+                </button>
+
+                <p class="loginLink">
+                    Já possui conta?
+                    <a href="login.html">Entrar</a>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="../js/cadastro.js"></script>
+
+</body>
+</html>
