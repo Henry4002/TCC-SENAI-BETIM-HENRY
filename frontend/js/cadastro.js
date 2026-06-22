@@ -1,21 +1,40 @@
-const botao = document.getElementById("btnCadastrar");
+const btnCadastrar = document.getElementById("btnCadastrar");
 
-botao.addEventListener("click", function(){
+btnCadastrar.addEventListener("click", function(){
 
-    const nome = document.getElementById("nome").value;
-    const email = document.getElementById("email").value;
-    const usuario = document.getElementById("usuario").value;
-    const senha = document.getElementById("senha").value;
-    const confirmarSenha = document.getElementById("confirmarSenha").value;
+    const nome = document.getElementById("nome").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const usuario = document.getElementById("usuario").value.trim();
+    const senha = document.getElementById("senha").value.trim();
+    const confirmarSenha = document.getElementById("confirmarSenha").value.trim();
+
+    const tipoUsuario = document.querySelector(
+        'input[name="tipoUsuario"]:checked'
+    );
+
+    if(
+        nome === "" ||
+        email === "" ||
+        usuario === "" ||
+        senha === "" ||
+        confirmarSenha === ""
+    ){
+        alert("Preencha todos os campos!");
+        return;
+    }
+
+    if(!tipoUsuario){
+        alert("Selecione um tipo de usuário!");
+        return;
+    }
 
     if(senha !== confirmarSenha){
         alert("As senhas não coincidem!");
         return;
     }
 
-    console.log(nome);
-    console.log(email);
-    console.log(usuario);
-
     alert("Cadastro realizado com sucesso!");
+
+    window.location.href = "login.html";
+
 });

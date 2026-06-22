@@ -1,0 +1,274 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:#f5f5f5;
+}
+
+header{
+    height:70px;
+
+    background:#4B1706;
+
+    color:white;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 25px;
+}
+
+.usuario{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.usuario a{
+    color:white;
+    text-decoration:none;
+}
+
+.perfil{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.container{
+    display:flex;
+}
+
+aside{
+    width:280px;
+    min-height:100vh;
+
+    background-image:
+    linear-gradient(
+        rgba(0,0,0,0.4),
+        rgba(0,0,0,0.4)
+    ),
+    url('../img/bread2.jpg');
+
+    background-size:cover;
+    background-position:center;
+
+    color:white;
+
+    padding:20px;
+}
+
+.logoLateral{
+    text-align:center;
+    margin-bottom:50px;
+}
+
+.logoLateral h1{
+    font-size:45px;
+}
+
+.logoLateral p{
+    margin-top:10px;
+    font-size:15px;
+    line-height:25px;
+}
+
+aside ul{
+    list-style:none;
+}
+
+aside li{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:15px;
+
+    margin-bottom:10px;
+
+    border-radius:15px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+    font-size:22px;
+
+    font-weight:bold;
+}
+
+aside li:hover{
+    background:rgba(255,255,255,0.2);
+}
+
+.ativo{
+    background:rgba(255,255,255,0.35);
+}
+
+main{
+    flex:1;
+    padding:30px;
+}
+
+.boasVindas{
+    margin-bottom:25px;
+}
+
+.boasVindas h1{
+    font-size:45px;
+    font-weight:normal;
+}
+
+.topoDashboard{
+    display:flex;
+    gap:30px;
+}
+
+.novoProduto{
+
+    width:60%;
+    height:350px;
+
+    border-radius:25px;
+
+    overflow:hidden;
+
+    background-image:url('../img/dashboard.jpg');
+
+    background-size:cover;
+    background-position:center;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.novoProduto:hover{
+    transform:scale(1.02);
+}
+
+.overlay{
+
+    width:100%;
+    height:100%;
+
+    background:rgba(255,255,255,0.65);
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#555;
+}
+
+.overlay i{
+    font-size:90px;
+    margin-bottom:20px;
+}
+
+.overlay h2{
+    font-size:40px;
+}
+
+.estatisticas{
+
+    width:40%;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:20px;
+}
+
+.cardEstatistica{
+
+    background:#E6C49A;
+
+    border-radius:20px;
+
+    padding:20px;
+}
+
+.cardEstatistica i{
+    font-size:35px;
+    margin-bottom:10px;
+}
+
+.cardEstatistica h2{
+    font-size:50px;
+}
+
+.cardEstatistica p{
+    font-size:20px;
+}
+
+.cardEstatistica a{
+
+    display:block;
+
+    margin-top:10px;
+
+    color:black;
+
+    text-decoration:none;
+
+    font-size:14px;
+}
+
+.tabela{
+
+    margin-top:30px;
+
+    background:#B88752;
+
+    padding:20px;
+
+    border-radius:30px;
+}
+
+.tabela h3{
+    text-align:center;
+    margin-bottom:10px;
+}
+
+table{
+
+    width:100%;
+
+    background:white;
+
+    border-radius:20px;
+
+    border-collapse:collapse;
+
+    overflow:hidden;
+}
+
+th,
+td{
+
+    padding:12px;
+
+    border-bottom:1px solid #ddd;
+
+    text-align:center;
+}
+
+th{
+    background:#f5f5f5;
+}

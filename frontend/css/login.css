@@ -197,3 +197,6 @@ nav a:hover{
 
     outline: none;
 }
+.esqueciSenha:hover{
+    text-decoration: underline;
+}
