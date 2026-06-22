@@ -15,7 +15,7 @@ public class Receita {
     @Column(name = "nome", nullable = false)
     private String nome;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "idProduto")
     private Produto produto;
 
