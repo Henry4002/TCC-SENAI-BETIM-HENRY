@@ -65,6 +65,7 @@ public class VersaoReceitaService {
         versaoReceitaExistente.setNumero_versao(versaoReceita.getNumero_versao());
         versaoReceitaExistente.setDescricao(versaoReceita.getDescricao());
         versaoReceitaExistente.setReceita(versaoReceita.getReceita());
+        versaoReceitaExistente.setData_versao(LocalDate.now());
 
         return repository.save(versaoReceitaExistente);
     }
