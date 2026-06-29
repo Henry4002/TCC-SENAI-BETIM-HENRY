@@ -1,37 +1,23 @@
-package com.onemonth.backend.model;
-
-
-import jakarta.persistence.*;
+package com.onemonth.backend.dto;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "historico")
-public class Historico {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class HistoricoDTO {
     private Long id;
-
-
-    @Column(columnDefinition = "TEXT")
     private String acao;
-
-
-    @Column(name = "data_historico")
     private LocalDateTime dataHistorico;
+    private String usuario;
+    private String produto;
 
+    public HistoricoDTO() {
+    }
 
-    @ManyToOne
-    @JoinColumn(name = "idUsuario")
-    private Usuario usuario;
-
-
-    @ManyToOne
-    @JoinColumn(name = "idProduto")
-    private Produto produto;
-
-    public Historico() {
+    public HistoricoDTO(Long id, String acao, LocalDateTime dataHistorico, String usuario, String produto) {
+        this.id = id;
+        this.acao = acao;
+        this.dataHistorico = dataHistorico;
+        this.usuario = usuario;
+        this.produto = produto;
     }
 
     public Long getId() {
@@ -58,19 +44,19 @@ public class Historico {
         this.dataHistorico = dataHistorico;
     }
 
-    public Usuario getUsuario() {
+    public String getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
 
-    public Produto getProduto() {
+    public String getProduto() {
         return produto;
     }
 
-    public void setProduto(Produto produto) {
+    public void setProduto(String produto) {
         this.produto = produto;
     }
 }

@@ -1,6 +1,8 @@
 package com.onemonth.backend.service;
 
 
+import com.onemonth.backend.exception.ResourceNotFoundException;
+import com.onemonth.backend.exception.ValidationException;
 import com.onemonth.backend.model.StatusProduto;
 import com.onemonth.backend.repository.StatusProdutoRepository;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,7 @@ public class StatusProdutoService {
 
     public void validarStatus(StatusProduto status){
         if(status.getNome() == null || status.getNome().isBlank()){
-            throw new IllegalArgumentException("Campo nome obrigatório!");
-        }
-    }
-
-    public void validarExistenciaStatus(Long id){
-        if(!repository.existsById(id)){
-            throw new IllegalArgumentException("Status não encontrado!");
+            throw new ValidationException("Campo nome obrigatório!");
         }
     }
 
@@ -47,22 +43,26 @@ public class StatusProdutoService {
             return statusProduto.get();
         }
 
-        throw new IllegalArgumentException("Status não encontrado!");
+        throw new ResourceNotFoundException("Status-produto não encontrado!");
     }
 
     public StatusProduto atualizarStatus (StatusProduto status){
         validarStatus(status);
 
-        validarExistenciaStatus(status.getId());
+        StatusProduto statusProdutoExistente = repository.findById(status.getId())
+                .orElseThrow(()-> new ResourceNotFoundException("Status-produto não encontrado!"));
 
-        return repository.save(status);
+        statusProdutoExistente.setNome(status.getNome());
+
+        return repository.save(statusProdutoExistente);
     }
 
     public void deletarStatus(Long id){
 
-        validarExistenciaStatus(id);
+        StatusProduto statusProduto = repository.findById(id)
+                        .orElseThrow(()-> new ResourceNotFoundException("Status-produto não encontrado!"));
 
-        repository.deleteById(id);
+        repository.delete(statusProduto);
     }
 
 

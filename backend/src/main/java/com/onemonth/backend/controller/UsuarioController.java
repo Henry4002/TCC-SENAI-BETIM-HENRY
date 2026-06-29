@@ -1,6 +1,7 @@
 package com.onemonth.backend.controller;
 
 
+import com.onemonth.backend.dto.UsuarioDTO;
 import com.onemonth.backend.model.Usuario;
 import com.onemonth.backend.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,14 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public List<Usuario> listarUsuarios(){
+    public List<UsuarioDTO> listarUsuarios(){
         return service.listarUsuarios();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Long id){
 
-        Usuario usuario = service.buscarPorId(id);
+        UsuarioDTO usuario = service.buscarPorId(id);
         return ResponseEntity.ok(usuario);
 
     }

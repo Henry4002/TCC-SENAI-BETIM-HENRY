@@ -1,6 +1,7 @@
 package com.onemonth.backend.controller;
 
 
+import com.onemonth.backend.dto.ProdutoDTO;
 import com.onemonth.backend.model.Produto;
 
 import com.onemonth.backend.service.ProdutoService;
@@ -20,14 +21,14 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public List<Produto> listarProdutos(){
+    public List<ProdutoDTO> listarProdutos(){
         return  service.listarProdutos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ProdutoDTO> buscarPorId(@PathVariable Long id) {
 
-        Produto produto = service.buscarPorId(id);
+        ProdutoDTO produto = service.buscarPorId(id);
         return ResponseEntity.ok(produto);
 
     }

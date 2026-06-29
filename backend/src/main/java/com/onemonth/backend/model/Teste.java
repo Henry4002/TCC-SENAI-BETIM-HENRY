@@ -15,7 +15,7 @@ public class Teste {
     private Long id;
 
     @Column(name = "data_teste", nullable = false)
-    private LocalDateTime data_teste;
+    private LocalDateTime dataTeste;
 
     @Column(columnDefinition = "TEXT")
     private String resultado;
@@ -39,12 +39,12 @@ public class Teste {
         this.id = id;
     }
 
-    public LocalDateTime getData_teste() {
-        return data_teste;
+    public LocalDateTime getDataTeste() {
+        return dataTeste;
     }
 
-    public void setData_teste(LocalDateTime data_teste) {
-        this.data_teste = data_teste;
+    public void setDataTeste(LocalDateTime dataTeste) {
+        this.dataTeste = dataTeste;
     }
 
     public String getResultado() {

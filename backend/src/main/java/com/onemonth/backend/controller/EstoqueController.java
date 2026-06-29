@@ -1,5 +1,6 @@
 package com.onemonth.backend.controller;
 
+import com.onemonth.backend.dto.EstoqueDTO;
 import com.onemonth.backend.model.Estoque;
 import com.onemonth.backend.service.EstoqueService;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +18,14 @@ public class EstoqueController {
     }
 
     @GetMapping
-    public List<Estoque> listarEstoques(){
+    public List<EstoqueDTO> listarEstoques(){
         return service.listarEstoques();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Estoque> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<EstoqueDTO> buscarPorId(@PathVariable Long id){
 
-        Estoque estoque = service.buscarPorId(id);
+        EstoqueDTO estoque = service.buscarPorId(id);
         return ResponseEntity.ok(estoque);
     }
 

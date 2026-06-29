@@ -9,11 +9,28 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> tratarIllegalArgumentException(IllegalArgumentException e){
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> tratarRecursoNaoEncontrado(
+            ResourceNotFoundException ex){
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(e.getMessage());
+        ErrorResponse erro = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage()
+
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
     }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> tratarValidacao(
+            ValidationException ex){
+
+        ErrorResponse erro = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+    }
+
 }

@@ -1,34 +1,24 @@
-package com.onemonth.backend.model;
-
-
-import jakarta.persistence.*;
+package com.onemonth.backend.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-@Entity
-@Table(name = "versao_receita")
-public class VersaoReceita {
+public class VersaoReceitaDTO {
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "numero_versao", nullable = false)
     private int numeroVersao;
-
-    @Column(name = "data_versao", nullable = false)
     private LocalDate dataVersao;
-
-    @Column(columnDefinition = "TEXT")
     private String descricao;
+    private String receita;
 
-    @ManyToOne
-    @JoinColumn(name = "idReceita")
-    private Receita receita;
+    public VersaoReceitaDTO() {
+    }
 
-    public VersaoReceita() {
+    public VersaoReceitaDTO(Long id, int numeroVersao, LocalDate dataVersao, String descricao, String receita) {
+        this.id = id;
+        this.numeroVersao = numeroVersao;
+        this.dataVersao = dataVersao;
+        this.descricao = descricao;
+        this.receita = receita;
     }
 
     public Long getId() {
@@ -63,11 +53,11 @@ public class VersaoReceita {
         this.descricao = descricao;
     }
 
-    public Receita getReceita() {
+    public String getReceita() {
         return receita;
     }
 
-    public void setReceita(Receita receita) {
+    public void setReceita(String receita) {
         this.receita = receita;
     }
 }

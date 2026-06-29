@@ -1,10 +1,14 @@
 package com.onemonth.backend.service;
 
 
+import com.onemonth.backend.dto.ReceitaDTO;
+import com.onemonth.backend.exception.ResourceNotFoundException;
+import com.onemonth.backend.exception.ValidationException;
 import com.onemonth.backend.model.Receita;
 import com.onemonth.backend.repository.ReceitaRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,19 +23,21 @@ public class ReceitaService {
 
     public void validarReceita(Receita receita){
         if(receita.getNome() == null || receita.getNome().isBlank()){
-            throw new IllegalArgumentException("Nome da receita obrigatório!");
+            throw new ValidationException("Nome da receita obrigatório!");
         }
         if(receita.getProduto() == null){
-            throw new IllegalArgumentException("Produto obrigatório!");
+            throw new ValidationException("Produto obrigatório!");
         }
     }
 
-    public void validarExistenciaReceita(Long id){
-
-        if(!repository.existsById(id)){
-            throw new IllegalArgumentException("Receita não encontrada!");
-        }
+    private ReceitaDTO converterParaDTO(Receita receita){
+        return new ReceitaDTO(
+                receita.getId(),
+                receita.getNome(),
+                receita.getProduto().getNome()
+        );
     }
+
 
     public Receita cadastrarReceita(Receita receita){
         validarReceita(receita);
@@ -39,29 +45,43 @@ public class ReceitaService {
         return repository.save(receita);
     }
 
-    public List<Receita> listarReceitas(){
-        return repository.findAll();
+    public List<ReceitaDTO> listarReceitas(){
+        List<Receita> receitas = repository.findAll();
+
+        List<ReceitaDTO> receitasDTO = new ArrayList<>();
+
+        for(Receita receita : receitas){
+            receitasDTO.add(converterParaDTO(receita));
+        }
+
+        return receitasDTO;
     }
 
-    public Receita buscarPorId(Long id){
-        Optional<Receita> receita = repository.findById(id);
+    public ReceitaDTO buscarPorId(Long id){
 
-        if(receita.isPresent()){
-            return receita.get();
-        }
-        throw new IllegalArgumentException("Receita não encontrada!");
+        Receita receita = repository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Receita não encontrada"));
+
+        return converterParaDTO(receita);
     }
 
     public Receita atualizarReceita(Receita receita){
         validarReceita(receita);
-        validarExistenciaReceita(receita.getId());
 
-        return repository.save(receita);
+        Receita receitaExistente = repository.findById(receita.getId())
+                .orElseThrow(()-> new ResourceNotFoundException("Receita não encontrada!"));
+
+        receitaExistente.setNome(receita.getNome());
+        receitaExistente.setProduto(receita.getProduto());
+
+        return repository.save(receitaExistente);
     }
 
     public void deletarReceita(Long id){
 
-        validarExistenciaReceita(id);
-        repository.deleteById(id);
+        Receita receita = repository.findById(id)
+                        .orElseThrow(()-> new ResourceNotFoundException("Receita não encontrada!"));
+
+        repository.delete(receita);
     }
 }

@@ -1,6 +1,8 @@
 package com.onemonth.backend.service;
 
 
+import com.onemonth.backend.exception.ResourceNotFoundException;
+import com.onemonth.backend.exception.ValidationException;
 import com.onemonth.backend.model.Perfil;
 import com.onemonth.backend.repository.PerfilRepository;
 import org.springframework.stereotype.Service;
@@ -19,16 +21,9 @@ public class PerfilService {
     public void validarPerfil (Perfil perfil){
 
         if(perfil.getNome() == null || perfil.getNome().isBlank()){
-            throw new IllegalArgumentException("Campo nome obrigatório!");
+            throw new ValidationException("Campo nome obrigatório!");
         }
 
-    }
-
-    public void validarExistenciaPerfil(Long id){
-
-        if(!repository.existsById(id)){
-            throw new IllegalArgumentException("Perfil não encontrado");
-        }
     }
 
     public Perfil cadastrarPerfil (Perfil perfil){
@@ -50,21 +45,26 @@ public class PerfilService {
             return perfil.get();
         }
 
-        throw new IllegalArgumentException("Perfil não encontrado");
+        throw new ResourceNotFoundException("Perfil não encontrado");
     }
 
     public Perfil atualizarPerfil (Perfil perfil){
 
         validarPerfil(perfil);
-        validarExistenciaPerfil(perfil.getId());
 
-        return repository.save(perfil);
+        Perfil perfilExistente = repository.findById(perfil.getId())
+                .orElseThrow(()-> new ResourceNotFoundException("Perfil não encontrado!"));
+
+        perfilExistente.setNome(perfil.getNome());
+
+        return repository.save(perfilExistente);
     }
 
     public void deletarPerfil (Long id){
 
-        validarExistenciaPerfil(id);
+        Perfil perfil = repository.findById(id)
+                        .orElseThrow(()-> new ResourceNotFoundException("Perfil não encontrado!"));
 
-        repository.deleteById(id);
+        repository.delete(perfil);
     }
 }

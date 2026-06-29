@@ -1,11 +1,15 @@
 package com.onemonth.backend.service;
 
 
+import com.onemonth.backend.dto.EstoqueDTO;
+import com.onemonth.backend.exception.ResourceNotFoundException;
+import com.onemonth.backend.exception.ValidationException;
 import com.onemonth.backend.model.Estoque;
 import com.onemonth.backend.repository.EstoqueRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,18 +27,23 @@ public class EstoqueService {
     public void validarEstoque(Estoque estoque){
 
         if(estoque.getQtdMinima() <= 0 || estoque.getQuantidade() <= 0){
-            throw new IllegalArgumentException("Quantidade inválida!");
+            throw new ValidationException("Quantidade inválida!");
         }
         if(estoque.getProduto()== null){
-            throw new IllegalArgumentException("Produto obrigatório!");
+            throw new ValidationException("Produto obrigatório!");
         }
     }
 
-    public void validarExistenciaEstoque(Long id){
-        if(!repository.existsById(id)){
-            throw new IllegalArgumentException("Estoque não encontrado!");
-        }
+    private EstoqueDTO converterParaDTO(Estoque estoque){
+        return new EstoqueDTO(
+                estoque.getId(),
+                estoque.getDataAtualizacao(),
+                estoque.getQtdMinima(),
+                estoque.getQuantidade(),
+                estoque.getProduto().getNome()
+        );
     }
+
 
     public Estoque cadastrarEstoque(Estoque estoque){
         validarEstoque(estoque);
@@ -44,26 +53,32 @@ public class EstoqueService {
         return repository.save(estoque);
     }
 
-    public List<Estoque> listarEstoques(){
-        return repository.findAll();
-    }
+    public List<EstoqueDTO> listarEstoques(){
+        List<Estoque> estoques = repository.findAll();
 
-    public Estoque buscarPorId(Long id){
-        Optional<Estoque> estoque = repository.findById(id);
+        List<EstoqueDTO> estoquesDTO = new ArrayList<>();
 
-        if(estoque.isPresent()){
-            return estoque.get();
+        for(Estoque estoque : estoques){
+            estoquesDTO.add(converterParaDTO(estoque));
         }
 
-        throw new IllegalArgumentException("Estoque não encontrado!");
+        return estoquesDTO;
+    }
+
+    public EstoqueDTO buscarPorId(Long id){
+
+        Estoque estoque = repository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Estoque não encontrado!"));
+
+        return converterParaDTO(estoque);
     }
 
     public Estoque atualizarEstoque(Estoque estoque){
 
         validarEstoque(estoque);
-        validarExistenciaEstoque(estoque.getId());
 
-        Estoque estoqueExistente = buscarPorId(estoque.getId());
+        Estoque estoqueExistente = repository.findById(estoque.getId())
+                        .orElseThrow(()-> new ResourceNotFoundException("Estoque não encontrado!"));
 
         estoqueExistente.setQuantidade(estoque.getQuantidade());
         estoqueExistente.setQtdMinima(estoque.getQtdMinima());
@@ -75,7 +90,8 @@ public class EstoqueService {
 
     public void deletarEstoque(Long id){
 
-        validarExistenciaEstoque(id);
-        repository.deleteById(id);
+        Estoque estoque = repository.findById(id)
+                        .orElseThrow(()-> new ResourceNotFoundException("Estoque não encontrado!"));
+        repository.delete(estoque);
     }
 }

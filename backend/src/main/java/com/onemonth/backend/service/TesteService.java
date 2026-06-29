@@ -1,12 +1,16 @@
 package com.onemonth.backend.service;
 
 
+import com.onemonth.backend.dto.TesteDTO;
+import com.onemonth.backend.exception.ResourceNotFoundException;
+import com.onemonth.backend.exception.ValidationException;
 import com.onemonth.backend.model.Teste;
 import com.onemonth.backend.repository.TesteRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,60 +25,74 @@ public class TesteService {
 
     public void validarTeste (Teste teste){
         if(teste.getResultado() == null || teste.getResultado().isBlank()){
-            throw new IllegalArgumentException("Resultado obrigatório!");
+            throw new ValidationException("Resultado obrigatório!");
         }
         if(teste.getUsuario() == null){
-            throw new IllegalArgumentException("Usuário obrigatório!");
+            throw new ValidationException("Usuário obrigatório!");
         }
         if(teste.getVersaoReceita() == null){
-            throw new IllegalArgumentException("Versão receita obrigatória!");
+            throw new ValidationException("Versão receita obrigatória!");
         }
     }
 
-    public void validarExistenciaTeste(Long id){
-        if(!repository.existsById(id)){
-            throw new IllegalArgumentException("Teste não encontrado!");
-        }
+    private TesteDTO converterParaDTO(Teste teste){
+        return new TesteDTO(
+                teste.getId(),
+                teste.getDataTeste(),
+                teste.getResultado(),
+                teste.getUsuario().getNome(),
+                teste.getVersaoReceita().getReceita().getNome(),
+                teste.getVersaoReceita().getNumeroVersao()
+        );
     }
 
     public Teste cadastrarTeste(Teste teste){
         validarTeste(teste);
-        teste.setData_teste(LocalDateTime.now());
+        teste.setDataTeste(LocalDateTime.now());
 
         return repository.save(teste);
     }
 
-    public List<Teste> listarTestes(){
-        return repository.findAll();
-    }
+    public List<TesteDTO> listarTestes(){
+        List<Teste> testes = repository.findAll();
 
-    public Teste buscarPorId(Long id){
-        Optional<Teste> teste = repository.findById(id);
-        if(teste.isPresent()){
-            return teste.get();
+        List<TesteDTO> testesDTO = new ArrayList<>();
+
+        for(Teste teste : testes){
+            testesDTO.add(converterParaDTO(teste));
         }
 
-        throw new IllegalArgumentException("Teste não encontrado!");
+        return testesDTO;
+    }
+
+    public TesteDTO buscarPorId(Long id){
+
+        Teste teste = repository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Teste não encontrado!"));
+
+        return converterParaDTO(teste);
     }
 
     public Teste atualizarTeste(Teste teste){
         validarTeste(teste);
-        validarExistenciaTeste(teste.getId());
 
-        Teste testeExistente = buscarPorId(teste.getId());
+        Teste testeExistente = repository.findById(teste.getId())
+                        .orElseThrow(()-> new ResourceNotFoundException("Teste não encontrado!"));
 
         testeExistente.setResultado(teste.getResultado());
         testeExistente.setUsuario(teste.getUsuario());
         testeExistente.setVersaoReceita(teste.getVersaoReceita());
-        testeExistente.setData_teste(LocalDateTime.now());
+        testeExistente.setDataTeste(LocalDateTime.now());
 
         return repository.save(testeExistente);
     }
 
     public void deletarTeste(Long id){
 
-        validarExistenciaTeste(id);
-        repository.deleteById(id);
+        Teste teste = repository.findById(id)
+                        .orElseThrow(()-> new ResourceNotFoundException("Teste não encontrado!"));
+
+        repository.delete(teste);
     }
 
 }

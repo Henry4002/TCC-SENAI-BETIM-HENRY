@@ -1,6 +1,7 @@
 package com.onemonth.backend.controller;
 
 
+import com.onemonth.backend.dto.TesteDTO;
 import com.onemonth.backend.model.Teste;
 import com.onemonth.backend.service.TesteService;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +20,15 @@ public class TesteController {
     }
 
     @GetMapping
-    public List<Teste> listarTestes(){
+    public List<TesteDTO> listarTestes(){
         return service.listarTestes();
 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Teste> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<TesteDTO> buscarPorId(@PathVariable Long id){
 
-        Teste teste = service.buscarPorId(id);
+        TesteDTO teste = service.buscarPorId(id);
         return ResponseEntity.ok(teste);
     }
 

@@ -1,6 +1,7 @@
 package com.onemonth.backend.controller;
 
 
+import com.onemonth.backend.dto.HistoricoDTO;
 import com.onemonth.backend.model.Historico;
 import com.onemonth.backend.service.HistoricoService;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,14 @@ public class HistoricoController {
     }
 
     @GetMapping
-    public List<Historico> listarHistoricos(){
+    public List<HistoricoDTO> listarHistoricos(){
         return service.listarHistoricos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Historico> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<HistoricoDTO> buscarPorId(@PathVariable Long id){
 
-        Historico historico = service.buscarPorId(id);
+        HistoricoDTO historico = service.buscarPorId(id);
         return ResponseEntity.ok(historico);
     }
 

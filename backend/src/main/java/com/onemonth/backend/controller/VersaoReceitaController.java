@@ -1,6 +1,7 @@
 package com.onemonth.backend.controller;
 
 
+import com.onemonth.backend.dto.VersaoReceitaDTO;
 import com.onemonth.backend.model.VersaoReceita;
 import com.onemonth.backend.service.VersaoReceitaService;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,14 @@ public class VersaoReceitaController {
     }
 
     @GetMapping
-    public List<VersaoReceita> listarVersoesReceitas(){
+    public List<VersaoReceitaDTO> listarVersoesReceitas(){
         return service.listarVersoesReceitas();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VersaoReceita> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<VersaoReceitaDTO> buscarPorId(@PathVariable Long id){
 
-        VersaoReceita versaoReceita = service.buscarPorId(id);
+        VersaoReceitaDTO versaoReceita = service.buscarPorId(id);
         return ResponseEntity.ok(versaoReceita);
     }
 

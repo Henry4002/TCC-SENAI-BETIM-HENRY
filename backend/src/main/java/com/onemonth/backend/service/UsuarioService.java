@@ -1,10 +1,14 @@
 package com.onemonth.backend.service;
 
 
+import com.onemonth.backend.dto.UsuarioDTO;
+import com.onemonth.backend.exception.ResourceNotFoundException;
+import com.onemonth.backend.exception.ValidationException;
 import com.onemonth.backend.model.Usuario;
 import com.onemonth.backend.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,30 +24,32 @@ public class UsuarioService {
     public void validarUsuario(Usuario usuario){
 
         if(usuario.getNome() == null || usuario.getNome().isBlank()){
-            throw new IllegalArgumentException("Campo nome obrigatório!");
+            throw new ValidationException("Campo nome obrigatório!");
         }
         if(usuario.getSenha() == null || usuario.getSenha().isBlank()){
-            throw new IllegalArgumentException("Campo senha obrigatório!");
+            throw new ValidationException("Campo senha obrigatório!");
         }
         if(usuario.getSenha() != null && usuario.getSenha().length() <4){
-            throw new IllegalArgumentException("Senha muito curta!(Minimo 4 caracteres)");
+            throw new ValidationException("Senha muito curta!(Minimo 4 caracteres)");
         }
         if(usuario.getEmail() == null || usuario.getEmail().isBlank()){
-            throw new IllegalArgumentException("Campo email obrigatório");
+            throw new ValidationException("Campo email obrigatório");
         }
         if(!usuario.getEmail().contains("@")){
-            throw new IllegalArgumentException("Email inválido");
+            throw new ValidationException("Email inválido");
         }
         if(usuario.getPerfil() == null){
-            throw new IllegalArgumentException("Perfil obrigatório!");
+            throw new ValidationException("Perfil obrigatório!");
         }
     }
 
-    public void validarExistenciaUsuario(Long id){
-
-        if(!repository.existsById(id)){
-            throw new IllegalArgumentException("Usuário não encontrado!");
-        }
+    private UsuarioDTO converterParaDTO(Usuario usuario){
+        return new UsuarioDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
+                usuario.getPerfil().getNome()
+        );
     }
 
     public Usuario cadastrarUsuario(Usuario usuario){
@@ -52,31 +58,46 @@ public class UsuarioService {
         return repository.save(usuario);
     }
 
-    public List<Usuario> listarUsuarios(){
-        return repository.findAll();
-    }
+    public List<UsuarioDTO> listarUsuarios(){
+        List<Usuario> usuarios = repository.findAll();
 
-    public Usuario buscarPorId(Long id){
-        Optional<Usuario> usuario = repository.findById(id);
+        List<UsuarioDTO> usuariosDTO = new ArrayList<>();
 
-        if(usuario.isPresent()){
-            return usuario.get();
+        for(Usuario usuario : usuarios){
+            usuariosDTO.add(converterParaDTO(usuario));
         }
 
-        throw new IllegalArgumentException("Usuário não encontrado");
+        return usuariosDTO;
+    }
+
+    public UsuarioDTO buscarPorId(Long id) {
+
+        Usuario usuario = repository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Usuário não encontrado!"));
+
+        return converterParaDTO(usuario);
     }
 
     public Usuario atualizarUsuario (Usuario usuario){
         validarUsuario(usuario);
-        validarExistenciaUsuario(usuario.getId());
 
-        return repository.save(usuario);
+        Usuario usuarioExistente = repository.findById(usuario.getId())
+                .orElseThrow(()-> new ResourceNotFoundException("Usuário não encontrado!"));
+
+        usuarioExistente.setNome(usuario.getNome());
+        usuarioExistente.setEmail(usuario.getEmail());
+        usuarioExistente.setSenha(usuario.getSenha());
+        usuarioExistente.setPerfil(usuario.getPerfil());
+
+        return repository.save(usuarioExistente);
     }
 
     public void deletarUsuario (Long id){
 
-        validarExistenciaUsuario(id);
-        repository.deleteById(id);
+        Usuario usuario = repository.findById(id)
+                        .orElseThrow(()-> new ResourceNotFoundException("Usuário não encontrado!"));
+
+        repository.delete(usuario);
 
     }
 }
