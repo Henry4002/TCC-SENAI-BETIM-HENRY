@@ -6,6 +6,7 @@ import com.onemonth.backend.exception.ResourceNotFoundException;
 import com.onemonth.backend.exception.ValidationException;
 import com.onemonth.backend.model.Usuario;
 import com.onemonth.backend.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,9 +17,11 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository repository) {
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void validarUsuario(Usuario usuario){
@@ -55,6 +58,8 @@ public class UsuarioService {
     public Usuario cadastrarUsuario(Usuario usuario){
         validarUsuario(usuario);
 
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+
         return repository.save(usuario);
     }
 
@@ -86,7 +91,7 @@ public class UsuarioService {
 
         usuarioExistente.setNome(usuario.getNome());
         usuarioExistente.setEmail(usuario.getEmail());
-        usuarioExistente.setSenha(usuario.getSenha());
+        usuarioExistente.setSenha(passwordEncoder.encode(usuario.getSenha()));
         usuarioExistente.setPerfil(usuario.getPerfil());
 
         return repository.save(usuarioExistente);
