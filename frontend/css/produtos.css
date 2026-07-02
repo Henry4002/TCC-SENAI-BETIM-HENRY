@@ -66,19 +66,18 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo um pouco mais escuro */
+    
+    /* MUDANÇA AQUI: Esconde fisicamente em vez de usar apenas opacidade */
+    display: none; 
     justify-content: center;
     align-items: center;
-    z-index: 100;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease-in-out;
+    z-index: 9999; /* Z-index gigante para garantir que fica por cima de TUDO */
 }
 
+/* Quando o JS adiciona a classe "ativo", ele passa a ser exibido */
 .modal-overlay.ativo {
-    opacity: 1;
-    pointer-events: auto;
+    display: flex;
 }
 
 .modal-content {

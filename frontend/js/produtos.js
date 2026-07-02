@@ -1,23 +1,24 @@
-// ==========================================================================
-// 1. CONTROLE DE ACESSO E INICIALIZAÇÃO
-// ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-    // Garante proteção da tela
+    /* BLOQUEIO DE LOGIN DESATIVADO PARA TESTES
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado")) || null;
     if (!usuarioLogado) {
         window.location.href = "login.html";
         return;
     }
+    */
 
     const nomePerfil = document.querySelector(".perfil span");
-    if (nomePerfil && usuarioLogado.nome) {
-        nomePerfil.textContent = usuarioLogado.nome;
+    if (nomePerfil) {
+        nomePerfil.textContent = "Leandro";
     }
+    
+    // ... restante do teu código original da tela inicial (menu mobile, etc.)
 
-    // Inicializa as funções da tela
+    // Inicializa todas as funções locais da tela
     inicializarModal();
     renderizarTabelaProdutos();
     configurarFormulario();
+    configurarNavegacaoLateral();
 });
 
 // ==========================================================================
@@ -25,89 +26,87 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================================================
 function inicializarModal() {
     const modal = document.getElementById("modalCadastro");
-    const btnAbrir = document.getElementById("btnAbrirModal");
+    const btnAbrir = document.getElementById("btnAbrirModal"); 
     const btnFechar = document.getElementById("btnFecharModal");
 
-    if (modal && btnAbrir && btnFechar) {
-        // Abre o modal ao clicar no botão principal
-        btnAbrir.addEventListener("click", () => {
-            modal.classList.add("ativo");
-            document.getElementById("formProduto").reset(); // Limpa dados anteriores
-            document.getElementById("prodNome").focus();    // Coloca o cursor no primeiro campo
-        });
+    if (!modal || !btnAbrir || !btnFechar) return;
 
-        // Fecha o modal ao clicar no X
-        btnFechar.addEventListener("click", () => {
+    // Abre o modal ao clicar no botão principal
+    btnAbrir.addEventListener("click", () => {
+        modal.classList.add("ativo");
+        document.getElementById("formProduto").reset(); // Limpa dados anteriores
+        modal.setAttribute("aria-hidden", "false");
+    });
+
+    // Fecha o modal ao clicar no "X"
+    btnFechar.addEventListener("click", () => {
+        modal.classList.remove("ativo");
+        modal.setAttribute("aria-hidden", "true");
+    });
+
+    // Fecha o modal ao clicar na parte escura de fora
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
             modal.classList.remove("ativo");
-        });
-
-        // Fecha o modal se o usuário clicar na área escura de fora
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-                modal.classList.remove("ativo");
-            }
-        });
-    } else {
-        console.error("Erro: Um ou mais botões do modal não foram encontrados no HTML.");
-    }
-}
-
-// ==========================================================================
-// 3. EXIBIR PRODUTOS NA TABELA
-// ==========================================================================
-function renderizarTabelaProdutos() {
-    const tbody = document.getElementById("tabelaProdutosBody");
-    if (!tbody) return;
-
-    // Busca os produtos ou cria dados iniciais mockados se o banco local estiver vazio
-    let produtos = JSON.parse(localStorage.getItem("produtos"));
-    
-    if (!produtos || produtos.length === 0) {
-        produtos = [
-            { id: 1001, lote: "LT-PR-2026-01", nome: "Pão Francês", categoria: "Panificação", minimo: 50 },
-            { id: 1002, lote: "LT-CF-2026-04", nome: "Bolo de Cenoura", categoria: "Confeitaria", minimo: 10 }
-        ];
-        localStorage.setItem("produtos", JSON.stringify(produtos));
-    }
-
-    tbody.innerHTML = ""; // Limpa linhas velhas
-
-    produtos.forEach((produto, index) => {
-        const tr = document.createElement("tr");
-
-        tr.innerHTML = `
-            <td>#${produto.id}</td>
-            <td><strong>${produto.lote}</strong></td>
-            <td>${produto.nome}</td>
-            <td>${produto.categoria}</td>
-            <td>${produto.minimo} un</td>
-            <td>
-                <button class="btn-acao editar" onclick="editarProduto(${index})" title="Editar Produto">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </button>
-                <button class="btn-acao excluir" onclick="excluirProduto(${index})" title="Excluir Produto">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(tr);
+            modal.setAttribute("aria-hidden", "true");
+        }
     });
 }
 
 // ==========================================================================
-// 4. SALVAR O NOVO PRODUTO NO LOCALSTORAGE
+// 3. RENDERIZAÇÃO DA TABELA (BANCO LOCAL PROVISÓRIO)
+// ==========================================================================
+function renderizarTabelaProdutos() {
+    const tabelaBody = document.getElementById("tabelaProdutosBody");
+    if (!tabelaBody) return;
+
+    // Busca os produtos já salvos ou cria o primeiro item de exemplo
+    let produtos = JSON.parse(localStorage.getItem("produtos")) || [
+        { id: 1001, lote: "LT-PR-2026-01", nome: "Pão Francês", categoria: "Panificação", minimo: 50 }
+    ];
+
+    // Salva o padrão caso o localStorage esteja zerado
+    if (!localStorage.getItem("produtos")) {
+        localStorage.setItem("produtos", JSON.stringify(produtos));
+    }
+
+    tabelaBody.innerHTML = ""; // Limpa linhas antigas antes de renderizar
+
+    produtos.forEach((produto, index) => {
+        const linha = document.createElement("tr");
+        linha.innerHTML = `
+            <td>#${produto.id}</td>
+            <td>${produto.lote}</td>
+            <td>${produto.nome}</td>
+            <td>${produto.categoria}</td>
+            <td>${produto.minimo} un</td>
+            <td>
+                <button class="btn-acao editar" title="Editar" onclick="editarProduto(${index})">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="btn-acao excluir" title="Excluir" onclick="excluirProduto(${index})">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
+        `;
+        tabelaBody.appendChild(linha);
+    });
+}
+
+// ==========================================================================
+// 4. PROCESSAMENTO E CADASTRO DO FORMULÁRIO
 // ==========================================================================
 function configurarFormulario() {
     const form = document.getElementById("formProduto");
     const modal = document.getElementById("modalCadastro");
 
-    if (form) {
-        form.addEventListener("submit", (e) => {
-            e.preventDefault(); // Impede o reload da página
+    if (form && modal) {
+        form.addEventListener("submit", (event) => {
+            event.preventDefault(); // Impede a página de recarregar
 
-            const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
+            let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
 
-            // Captura os dados dos inputs
+            // Captura os dados dos inputs e gera um id incremental sequencial
             const novoProduto = {
                 id: produtos.length > 0 ? produtos[produtos.length - 1].id + 1 : 1001,
                 lote: document.getElementById("prodLote").value.trim(),
@@ -117,10 +116,10 @@ function configurarFormulario() {
             };
 
             produtos.push(novoProduto);
-            localStorage.setItem("produtos", JSON.stringify(produtos)); // Grava no banco
+            localStorage.setItem("produtos", JSON.stringify(produtos)); // Grava no banco simulado
 
             modal.classList.remove("ativo"); // Esconde o modal
-            renderizarTabelaProdutos();      // Recarrega a tabela na hora
+            renderizarTabelaProdutos();      // Atualiza a tabela imediatamente
         });
     }
 }
@@ -140,5 +139,33 @@ function excluirProduto(index) {
 
 function editarProduto(index) {
     const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-    console.log("Item selecionado para futura edição:", produtos[index]);
+    alert(`Editar selecionado para: ${produtos[index].nome} (Funcionalidade futura)`);
+}
+
+// ==========================================================================
+// 6. NAVEGAÇÃO LATERAL
+// ==========================================================================
+function configurarNavegacaoLateral() {
+    const itensMenu = document.querySelectorAll("aside ul li");
+
+    itensMenu.forEach(item => {
+        item.addEventListener("click", () => processarCliqueMenu(item));
+        item.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault(); 
+                processarCliqueMenu(item);
+            }
+        });
+    });
+}
+
+function processarCliqueMenu(itemClicado) {
+    const texto = itemClicado.innerText || itemClicado.textContent;
+    const modulo = texto.trim().toLowerCase();
+
+    if (modulo.includes("produtos")) {
+        window.location.href = "produtos.html";
+    } else if (modulo.includes("início") || modulo.includes("inicio")) {
+        window.location.href = "telaInicial.html";
+    }
 }

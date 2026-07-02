@@ -27,7 +27,7 @@
                 <i class="fa-regular fa-circle-user" aria-hidden="true"></i>
                 <span>Leandro</span>
             </div>
-            <a href="#" id="btnLogout" aria-label="Sair do sistema">
+            <a href="login.html" id="btnLogout" aria-label="Sair do sistema">
                 Deslogar
                 <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
             </a>
@@ -42,15 +42,28 @@
             </div>
 
             <nav aria-label="Navegação Principal">
-                <ul role="menu">
-                    <li class="ativo" role="menuitem" tabindex="0" aria-current="page"><i class="fa-solid fa-house" aria-hidden="true"></i> Início</li>
-                    <li role="menuitem" tabindex="0" onclick="window.location.href='produtos.html'"><i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i> Produtos</li>
-                    <li role="menuitem" tabindex="0" onclick="window.location.href='receitas.html'"><i class="fa-solid fa-kitchen-set" aria-hidden="true"></i> Receitas</li>
-                    <li role="menuitem" tabindex="0" onclick="window.location.href='versoes.html'"><i class="fa-solid fa-code-branch" aria-hidden="true"></i> Versões</li>
-                    <li role="menuitem" tabindex="0" onclick="window.location.href='producao.html'"><i class="fa-solid fa-gears" aria-hidden="true"></i> Produção</li>
-                    <li role="menuitem" tabindex="0" onclick="window.location.href='estoque.html'"><i class="fa-solid fa-cubes" aria-hidden="true"></i> Estoque</li>
-                    <li role="menuitem" tabindex="0" onclick="window.location.href='usuarios.html'"><i class="fa-solid fa-users" aria-hidden="true"></i> Usuários</li>
-                    <li role="menuitem" tabindex="0" onclick="window.location.href='configuracao.html'"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Configuração</li>
+                <style>
+                    /* Garante que o link ocupa o botão inteiro e mantém o teu layout */
+                    aside ul li a {
+                        text-decoration: none;
+                        color: inherit;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        width: 100%;
+                        height: 100%;
+                        outline: none;
+                    }
+                </style>
+                <ul>
+                    <li class="ativo"><a href="telaInicial.html"><i class="fa-solid fa-house"></i> Início</a></li>
+                    <li><a href="produtos.html"><i class="fa-solid fa-boxes-stacked"></i> Produtos</a></li>
+                    <li><a href="#"><i class="fa-solid fa-kitchen-set"></i> Receitas</a></li>
+                    <li><a href="#"><i class="fa-solid fa-code-branch"></i> Versões</a></li>
+                    <li><a href="#"><i class="fa-solid fa-gears"></i> Produção</a></li>
+                    <li><a href="#"><i class="fa-solid fa-cubes"></i> Estoque</a></li>
+                    <li><a href="#"><i class="fa-solid fa-users"></i> Usuários</a></li>
+                    <li><a href="#"><i class="fa-solid fa-sliders"></i> Configuração</a></li>
                 </ul>
             </nav>
         </aside>

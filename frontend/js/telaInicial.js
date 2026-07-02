@@ -2,20 +2,21 @@
 // 1. CONTROLE DE ACESSO, SESSÃO E MENU MOBILE (PROTEÇÃO DA TELA)
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-    // Verifica se há um usuário logado na sessão
+    /* BLOQUEIO DE LOGIN DESATIVADO PARA TESTES
     const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado")) || null;
-
-    // Se não tiver ninguém logado, barra o acesso e joga pro login
     if (!usuarioLogado) {
         window.location.href = "login.html";
         return;
     }
+    */
 
-    // Altera o nome no perfil do cabeçalho de forma dinâmica
     const nomePerfil = document.querySelector(".perfil span");
-    if (nomePerfil && usuarioLogado.nome) {
-        nomePerfil.textContent = usuarioLogado.nome;
+    if (nomePerfil) {
+        nomePerfil.textContent = "Leandro";
     }
+    
+    
+    // ... restante do teu código original da tela inicial (menu mobile, etc.)
 
     // --- LOGICA DE ACESSIBILIDADE E CLIQUES DO MENU MOBILE ---
     const btnMenuMobile = document.getElementById("btnMenuMobile");
@@ -69,46 +70,44 @@ function carregarMetricasDinamicas() {
 }
 
 // ==========================================================================
-// 3. INTERATIVIDADE DA BARRA LATERAL (MENU ACTIVE)
+// 3. INTERATIVIDADE DA BARRA LATERAL (MENU ACTIVE E ACESSIBILIDADE)
 // ==========================================================================
 function configurarNavegacaoLateral() {
     const itensMenu = document.querySelectorAll("aside ul li");
 
     itensMenu.forEach(item => {
-        // 1. Ação ao clicar com o Rato
-        item.addEventListener("click", () => aplicarSelecaoMenu(item, itensMenu));
+        // Ação ao clicar com o rato
+        item.addEventListener("click", () => processarCliqueMenu(item));
         
-        // 2. ACESSIBILIDADE: Ação ao pressionar Enter ou Espaço usando o Teclado
+        // Ação ao pressionar Enter ou Espaço com o teclado focado (Tab)
         item.addEventListener("keydown", (event) => {
             if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault(); // Evita scroll indesejado ao carregar no Espaço
-                aplicarSelecaoMenu(item, itensMenu);
+                event.preventDefault(); // Evita scroll do ecrã com a barra de espaço
+                processarCliqueMenu(item);
             }
         });
     });
 }
 
-// Função auxiliar para gerir o estado ativo de forma limpa e acessível
-function aplicarSelecaoMenu(itemClicado, todosItens) {
-    todosItens.forEach(i => {
-        i.classList.remove("ativo");
-        i.removeAttribute("aria-current"); 
-    });
-    
-    itemClicado.classList.add("ativo");
-    itemClicado.setAttribute("aria-current", "page"); 
+function processarCliqueMenu(itemClicado) {
+    const modulo = itemClicado.textContent.trim().toLowerCase();
+    console.log(`Navegando para o módulo: ${modulo}`);
 
-    // FECHA A GAVETA MOBILE CASO ESTEJA ABERTA
+    // Fecha a gaveta mobile se estiver aberta
     const menuLateral = document.getElementById("menuLateral");
     const btnMenuMobile = document.getElementById("btnMenuMobile");
     if (menuLateral && btnMenuMobile) {
         menuLateral.classList.remove("aberto");
         btnMenuMobile.setAttribute("aria-expanded", "false");
-        btnMenuMobile.setAttribute("aria-label", "Abrir menu de navegação");
     }
 
-    const modulo = itemClicado.textContent.trim();
-    console.log(`Navegando de forma acessível para o módulo: ${modulo}`);
+    // Redirecionamento real
+    if (modulo.includes("produtos")) {
+        window.location.href = "produtos.html";
+    } else if (modulo.includes("início") || modulo.includes("inicio")) {
+        window.location.href = "telaInicial.html";
+    }
+    // Adiciona os outros links aqui futuramente (receitas, estoque, etc.)
 }
 
 // ==========================================================================
