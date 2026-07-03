@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
 
         );
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
     }
 
@@ -30,7 +31,19 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ResponseEntity<ErrorResponse> tratarCredenciaisInvalidas(
+            CredenciaisInvalidasException ex){
+
+        ErrorResponse erro = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
     }
 
 }
