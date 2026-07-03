@@ -480,3 +480,21 @@ tr:hover td {
     background-color: rgba(51, 30, 17, 0.08); 
     color: #331E11;
 }
+
+/* Customização discreta das bordas para identificar a situação real de cada card */
+.cardEstatistica:has(#numProdutos) {
+    border-left: 5px solid #DE9E52; /* Borda cor padrão do sistema */
+}
+
+.cardEstatistica:has(#numVersoes) {
+    border-left: 5px solid #007bff; /* Borda azul para versões */
+}
+
+.cardEstatistica:has(#numReceitas) {
+    border-left: 5px solid #28a745; /* Borda verde para receitas */
+}
+
+/* Modifica dinamicamente o card de estoque baixo para vermelho se houver produtos críticos */
+.cardEstatistica:has(#numEstoqueBaixo) {
+    border-left: 5px solid #ffcc00; /* Borda amarela por padrão */
+}

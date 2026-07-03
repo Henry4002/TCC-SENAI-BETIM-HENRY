@@ -1,130 +1,80 @@
-// ==========================================================================
-// 1. CONTROLE DE ACESSO, SESSÃO E MENU MOBILE (PROTEÇÃO DA TELA)
-// ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-    /* BLOQUEIO DE LOGIN DESATIVADO PARA TESTES
-    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado")) || null;
-    if (!usuarioLogado) {
-        window.location.href = "login.html";
-        return;
-    }
-    */
-
     const nomePerfil = document.querySelector(".perfil span");
     if (nomePerfil) {
         nomePerfil.textContent = "Leandro";
     }
-    
-    
-    // ... restante do teu código original da tela inicial (menu mobile, etc.)
 
-    // --- LOGICA DE ACESSIBILIDADE E CLIQUES DO MENU MOBILE ---
-    const btnMenuMobile = document.getElementById("btnMenuMobile");
-    const menuLateral = document.getElementById("menuLateral");
-
-    if (btnMenuMobile && menuLateral) {
-        btnMenuMobile.addEventListener("click", () => {
-            // Alterna a classe que faz a gaveta deslizar no CSS
-            const estaAberto = menuLateral.classList.toggle("aberto");
-            
-            // Atualiza os leitores de ecrã dinamicamente se está aberto ou fechado
-            btnMenuMobile.setAttribute("aria-expanded", estaAberto);
-            btnMenuMobile.setAttribute("aria-label", estaAberto ? "Fechar menu de navegação" : "Abrir menu de navegação");
-        });
-    }
-
-    // Inicializa as funções da Tela Inicial
+    // Inicializa o motor de cálculo dinâmico da Home
     carregarMetricasDinamicas();
     configurarNavegacaoLateral();
-    configurarBotaoLogout();
 });
 
-// ==========================================================================
-// 2. CARREGAMENTO DE MÉTRICAS E LÓGICA DO ESTOQUE CRÍTICO
-// ==========================================================================
 function carregarMetricasDinamicas() {
-    // Busca os dados do localStorage (ou assume um array vazio [] se não existirem)
-    const produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-    const versoes = JSON.parse(localStorage.getItem("versoes")) || [];
-    const receitas = JSON.parse(localStorage.getItem("receitas")) || [];
-    const estoque = JSON.parse(localStorage.getItem("estoque")) || []; 
-
-    // Seleciona a tag <p> de dentro de cada um dos 4 cards de estatística
-    const cards = document.querySelectorAll(".cardEstatistica p");
+    let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
     
-    // Alimenta os valores de forma direta e sem quebrar ou alterar cores do CSS
-    if (cards.length >= 4) {
-        cards[0].textContent = produtos.length;  // Total de Produtos
-        cards[1].textContent = versoes.length;   // Total de Versões
-        cards[2].textContent = receitas.length;  // Total de Receitas
-        
-        // Apenas calcula quantos itens estão abaixo do mínimo e joga o número no 4º card
-        const itensCriticos = estoque.filter(item => {
-            return item && typeof item.quantidade === 'number' && typeof item.minimo === 'number' 
-                ? item.quantidade < item.minimo 
-                : false;
-        });
-        
-        cards[3].textContent = itensCriticos.length; // Exibe a quantidade de itens em falta (começa em 0)
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    let totalProdutos = produtos.length;
+    let totalEstoqueBaixo = 0;
+
+    // Mapa para somar o saldo acumulado total de cada produto para verificar estoque mínimo geral
+    let agrupadoPorNome = {};
+    let minimosPorNome = {};
+
+    produtos.forEach(prod => {
+        const nome = prod.nome;
+        const atual = parseInt(prod.atual || 0);
+        const minimo = parseInt(prod.minimo || 0);
+
+        agrupadoPorNome[nome] = (agrupadoPorNome[nome] || 0) + atual;
+        minimosPorNome[nome] = minimo; // mantém a referência do mínimo configurado
+    });
+
+    // Calcula quantos produtos no total consolidado estão abaixo do mínimo
+    for (let nome in agrupadoPorNome) {
+        if (agrupadoPorNome[nome] < minimosPorNome[nome]) {
+            totalEstoqueBaixo++;
+        }
+    }
+
+    // Alimenta os seletores das suas divs mantendo os IDs definidos
+    const txtProdutos = document.getElementById("numProdutos");
+    const txtVersoes = document.getElementById("numVersoes");
+    const txtReceitas = document.getElementById("numReceitas");
+    const txtEstoqueBaixo = document.getElementById("numEstoqueBaixo");
+
+    if (txtProdutos) txtProdutos.textContent = totalProdutos;
+    
+    // Contagem de lotes criados (Versões Cadastradas)
+    if (txtVersoes) txtVersoes.textContent = totalProdutos; 
+    
+    // Simulação estável baseada nas categorias ou número de receitas bases distintas
+    if (txtReceitas) txtReceitas.textContent = Object.keys(agrupadoPorNome).length; 
+    
+    if (txtEstoqueBaixo) {
+        txtEstoqueBaixo.textContent = totalEstoqueBaixo;
+
+        // Regra de borda dinâmica direta via JS para o card de estoque baixo
+        const cardEstoque = txtEstoqueBaixo.closest('.cardEstatistica');
+        if (cardEstoque) {
+            if (totalEstoqueBaixo > 0) {
+                cardEstoque.style.borderLeft = "5px solid #cc0000"; // Vermelho Crítico se houver problemas
+            } else {
+                cardEstoque.style.borderLeft = "5px solid #ffcc00"; // Amarelo Padrão de Atenção
+            }
+        }
     }
 }
 
-// ==========================================================================
-// 3. INTERATIVIDADE DA BARRA LATERAL (MENU ACTIVE E ACESSIBILIDADE)
-// ==========================================================================
 function configurarNavegacaoLateral() {
     const itensMenu = document.querySelectorAll("aside ul li");
-
     itensMenu.forEach(item => {
-        // Ação ao clicar com o rato
-        item.addEventListener("click", () => processarCliqueMenu(item));
-        
-        // Ação ao pressionar Enter ou Espaço com o teclado focado (Tab)
-        item.addEventListener("keydown", (event) => {
-            if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault(); // Evita scroll do ecrã com a barra de espaço
-                processarCliqueMenu(item);
-            }
+        item.addEventListener("click", () => {
+            const modulo = item.textContent.trim().toLowerCase();
+            if (modulo.includes("produtos")) window.location.href = "produtos.html";
+            else if (modulo.includes("início") || modulo.includes("inicio")) window.location.href = "telaInicial.html";
+            else if (modulo.includes("estoque")) window.location.href = "estoque.html";
         });
     });
-}
-
-function processarCliqueMenu(itemClicado) {
-    const modulo = itemClicado.textContent.trim().toLowerCase();
-    console.log(`Navegando para o módulo: ${modulo}`);
-
-    // Fecha a gaveta mobile se estiver aberta
-    const menuLateral = document.getElementById("menuLateral");
-    const btnMenuMobile = document.getElementById("btnMenuMobile");
-    if (menuLateral && btnMenuMobile) {
-        menuLateral.classList.remove("aberto");
-        btnMenuMobile.setAttribute("aria-expanded", "false");
-    }
-
-    // Redirecionamento real
-    if (modulo.includes("produtos")) {
-        window.location.href = "produtos.html";
-    } else if (modulo.includes("início") || modulo.includes("inicio")) {
-        window.location.href = "telaInicial.html";
-    }
-    // Adiciona os outros links aqui futuramente (receitas, estoque, etc.)
-}
-
-// ==========================================================================
-// 4. CONFIGURAÇÃO DO BOTÃO DE LOGOUT (DESLOGAR)
-// ==========================================================================
-function configurarBotaoLogout() {
-    const btnLogout = document.getElementById("btnLogout");
-
-    if (btnLogout) {
-        btnLogout.addEventListener("click", function(event) {
-            event.preventDefault();
-
-            // Limpa o usuário da sessão 
-            localStorage.removeItem("usuarioLogado");
-
-            // Redireciona de volta para a tela de login
-            window.location.href = "login.html";
-        });
-    }
 }

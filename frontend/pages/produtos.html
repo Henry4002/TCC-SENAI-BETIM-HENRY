@@ -72,12 +72,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Código / Lote</th>
+                            <th>Código</th>
+                            <th>Lote de Produção</th>
                             <th>Nome do Produto</th>
                             <th>Categoria</th>
-                            <th>Qtd / Mínimo</th>
-                            <th>Status Estoque</th>
-                            <th>Validade / Status</th>
+                            <th>Estoque Mínimo</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -86,16 +85,16 @@
                 </table>
             </section>
         </main>
-    </div>
-
     <div id="modalCadastro" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
-                <h2>Novo Produto Inteligente</h2>
+                <h2 id="modalTitulo">Novo Produto Inteligente</h2>
                 <button type="button" id="btnFecharModal" class="btn-fechar">&times;</button>
             </div>
             
             <form id="formProduto">
+                <input type="hidden" id="prodIndexEdicao" value="">
+
                 <div class="form-group">
                     <label for="prodNome">Nome do Produto</label>
                     <input type="text" id="prodNome" required placeholder="Ex: Pão de Forma Integral">
@@ -103,33 +102,33 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="prodLote">Lote de Produção</label>
+                        <label for="prodLote">Lote de Production</label>
                         <input type="text" id="prodLote" required placeholder="Ex: LT-PFI-2026-01">
                     </div>
                     <div class="form-group">
                         <label for="prodCategoria">Categoria</label>
-                        <div style="display: flex; gap: 5px;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
                             <select id="prodCategoria" required style="flex: 1;">
                                 </select>
-                            <button type="button" id="btnNovaCategoria" title="Criar Nova Categoria" style="background: #331E11; color: white; border: none; padding: 0 12px; border-radius: 8px; cursor: pointer;">+</button>
+                            <button type="button" id="btnNovaCategoria" title="Criar Nova Categoria" style="background: #331E11; color: white; border: none; height: 40px; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.2rem;">+</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="prodAtual">Estoque Atual (Qtd)</label>
+                        <label for="prodAtual">Unidades do Lote (Estoque Atual)</label>
                         <input type="number" id="prodAtual" min="0" required placeholder="Ex: 50">
                     </div>
                     <div class="form-group">
-                        <label for="prodMinimo">Estoque Mínimo</label>
+                        <label for="prodMinimo">Estoque Mínimo Alvo</label>
                         <input type="number" id="prodMinimo" min="1" required placeholder="Ex: 20">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="prodFabricacao">Data de Fabricação</label>
+                        <label for="prodFabricacao">Data de Produção</label>
                         <input type="date" id="prodFabricacao" required>
                     </div>
                     <div class="form-group">
@@ -138,7 +137,11 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn-salvar" style="width: 100%; margin-top: 15px;">Salvar no Banco Local</button>
+                <button type="submit" id="btnSalvarProduto" class="btn-salvar" style="width: 100%; margin-top: 15px;">Salvar no Banco Local</button>
             </form>
         </div>
     </div>
+
+    <script src="../js/produtos.js"></script>
+</body>
+</html>

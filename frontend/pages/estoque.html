@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneMonth - Movimentação de Estoque</title>
+    <link rel="stylesheet" href="../css/telaInicial.css">
+    <link rel="stylesheet" href="../css/produtos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        .modal-content {
+            background-color: #FDFBF9;
+            width: 100%;
+            max-width: 460px;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        #formMovimentacao {
+            display: flex;
+            flex-direction: column;
+            gap: 16px; 
+            margin-top: 15px;
+        }
+
+        #formMovimentacao .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+
+        #formMovimentacao .form-row {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+        }
+
+        #formMovimentacao label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #331E11;
+        }
+
+        #formMovimentacao input, 
+        #formMovimentacao select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid rgba(51, 30, 17, 0.2);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background-color: #fff;
+            color: #331E11;
+            outline: none;
+            box-sizing: border-box; 
+        }
+
+        #formMovimentacao input:focus, 
+        #formMovimentacao select:focus {
+            border-color: #DE9E52;
+            box-shadow: 0 0 0 2px rgba(222, 158, 82, 0.2);
+        }
+
+        #camposExclusivosEntrada {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header role="banner">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button id="btnMenuMobile" aria-expanded="false" aria-controls="menuLateral" aria-label="Abrir menu de navegação" class="btn-menu-mobile">
+                <i class="fa-solid fa-bars" aria-hidden="true"></i>
+            </button>
+            <h2>Movimentação de Estoque</h2>
+        </div>
+        <div class="usuario">
+            <div class="perfil">
+                <i class="fa-regular fa-circle-user" aria-hidden="true"></i>
+                <span>Leandro</span>
+            </div>
+            <a href="login.html" id="btnLogout" aria-label="Sair do sistema">
+                Deslogar
+                <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+            </a>    
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <aside id="menuLateral">
+            <div class="logoLateral">
+                <h1>OneMonth</h1>
+                <p>Sistema de gestão do ciclo de vida de produtos</p>
+            </div>
+            <nav aria-label="Navegação Principal">
+                <ul>
+                    <li tabindex="0"><i class="fa-solid fa-house" aria-hidden="true"></i>Início</li>
+                    <li tabindex="0"><i class="fa-solid fa-box" aria-hidden="true"></i>Produtos</li>
+                    <li><a href="#"><i class="fa-solid fa-kitchen-set"></i> Receitas</a></li>
+                    <li><a href="#"><i class="fa-solid fa-code-branch"></i> Versões</a></li>
+                    <li><a href="#"><i class="fa-solid fa-gears"></i> Produção</a></li>
+                    <li><a href="#"><i class="fa-solid fa-cubes"></i> Estoque</a></li>
+                    <li><a href="#"><i class="fa-solid fa-users"></i> Usuários</a></li>
+                    <li><a href="#"><i class="fa-solid fa-sliders"></i> Configuração</a></li>
+                    <li tabindex="0" class="Ativo"><i class="fa-solid fa-cubes-stacked" aria-hidden="true"></i>Estoque</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main role="main">
+            <div class="acoes-produtos">
+                <div class="busca-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="buscaEstoque" placeholder="Filtrar por produto ou lote...">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button id="btnEntrada" class="btn-principal" style="background-color: #28a745;">
+                        <i class="fa-solid fa-plus-circle"></i> Entrada de Lote
+                    </button>
+                    <button id="btnSaida" class="btn-principal" style="background-color: #dc3545;">
+                        <i class="fa-solid fa-minus-circle"></i> Baixar Unidades
+                    </button>
+                </div>
+            </div>
+
+            <section class="atividades">
+                <h3>Lotes Ativos no Inventário</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código ID / Lote</th>
+                            <th>Produto Base</th>
+                            <th>Qtd Mínima Alvo</th>
+                            <th>Saldo do Lote</th>
+                            <th>Validade</th>
+                            <th>Situação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaEstoqueBody">
+                        </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <div id="modalMovimentacao" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalMovTitulo">Registrar Movimentação</h2>
+                <button type="button" id="btnFecharMov" class="btn-fechar">&times;</button>
+            </div>
+            
+            <form id="formMovimentacao">
+                <input type="hidden" id="movTipo" value="ENTRADA">
+
+                <div class="form-group">
+                    <label id="lblSelectProduto" for="movProduto">Selecionar Produto Base</label>
+                    <select id="movProduto" required></select>
+                </div>
+
+                <div id="camposExclusivosEntrada">
+                    <div class="form-group">
+                        <label for="movLoteNome">Código do Novo Lote</label>
+                        <input type="text" id="movLoteNome" placeholder="Ex: LT-PF-02">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="movFab">Fabricação</label>
+                            <input type="date" id="movFab">
+                        </div>
+                        <div class="form-group">
+                            <label for="movVal">Validade</label>
+                            <input type="date" id="movVal">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="movQuantidade">Quantidade (unidades)</label>
+                    <input type="number" id="movQuantidade" min="1" required placeholder="Ex: 50">
+                </div>
+
+                <button type="submit" class="btn-salvar" style="width: 100%; margin-top: 10px; background-color: #DE9E52;">Processar Movimentação</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/estoque.js"></script>
+</body>
+</html>
