@@ -35,12 +35,6 @@ public class UsuarioService {
         if(usuario.getSenha() != null && usuario.getSenha().length() <4){
             throw new ValidationException("Senha muito curta!(Minimo 4 caracteres)");
         }
-        if(usuario.getEmail() == null || usuario.getEmail().isBlank()){
-            throw new ValidationException("Campo email obrigatório");
-        }
-        if(!usuario.getEmail().contains("@")){
-            throw new ValidationException("Email inválido");
-        }
         if(usuario.getPerfil() == null){
             throw new ValidationException("Perfil obrigatório!");
         }
