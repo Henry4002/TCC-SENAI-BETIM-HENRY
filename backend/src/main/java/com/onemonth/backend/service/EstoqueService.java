@@ -26,21 +26,26 @@ public class EstoqueService {
 
 
 
-    private EstoqueDTO converterParaDTO(Estoque estoque){
-        return new EstoqueDTO(
-                estoque.getId(),
-                estoque.getDataAtualizacao(),
-                estoque.getQtdMinima(),
-                estoque.getQuantidade(),
-                estoque.getLote(),
-                estoque.getProduto().getNome()
-        );
-    }
+        private EstoqueDTO converterParaDTO(Estoque estoque){
+            return new EstoqueDTO(
+                    estoque.getId(),
+                    estoque.getDataAtualizacao(),
+                    estoque.getQtdMinima(),
+                    estoque.getQuantidade(),
+                    estoque.getDataFabricacao(),
+                    estoque.getDataValidade(),
+                    estoque.getLote(),
+                    estoque.getStatusValidade().name(),
+                    estoque.getProduto().getNome()
+            );
+        }
 
 
     public Estoque cadastrarEstoque(Estoque estoque){
 
-
+        if(estoque.getDataFabricacao().isAfter(estoque.getDataValidade())){
+            throw new ValidationException("A data de fabricação não pode ser posterior à data de validade!");
+        }
         estoque.setDataAtualizacao(LocalDateTime.now());
 
         return repository.save(estoque);
@@ -77,7 +82,8 @@ public class EstoqueService {
         estoqueExistente.setQtdMinima(estoque.getQtdMinima());
         estoqueExistente.setProduto(estoque.getProduto());
         estoqueExistente.setLote(estoque.getLote());
-        estoqueExistente.setDataAtualizacao(LocalDateTime.now());
+        estoqueExistente.setDataValidade(estoque.getDataValidade());
+        estoqueExistente.setDataFabricacao(estoque.getDataFabricacao());
 
         return repository.save(estoqueExistente);
     }

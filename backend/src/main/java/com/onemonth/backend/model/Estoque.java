@@ -2,10 +2,8 @@ package com.onemonth.backend.model;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +32,10 @@ public class Estoque {
     @Column(name = "quantidade", nullable = false)
     private int quantidade;
 
+    @NotNull(message = "A data de fabricação é obrigatória!")
+    @PastOrPresent(message = "A data de fabricação não pode ser futura!")
+    private LocalDate dataFabricacao;
+
     @NotNull(message = "A data de validade é obrigatória!")
     @Future(message = "A data de validade deve ser uma data futura!")
     @Column(name = "data_validade", nullable = false)
@@ -48,7 +50,34 @@ public class Estoque {
     @JoinColumn(name = "idProduto")
     private Produto produto;
 
+    @PrePersist
+    @PreUpdate
+    public void atualizarDataAtualizacao(){
+        this.dataAtualizacao = LocalDateTime.now();
+    }
+
+    public enum StatusValidade{
+        NORMAL,
+        PERTO_DE_VENCER,
+        VENCIDO
+    }
+
     public Estoque() {
+    }
+
+    public StatusValidade getStatusValidade(){
+
+        LocalDate hoje = LocalDate.now();
+
+        if(dataValidade.isBefore(hoje)){
+            return StatusValidade.VENCIDO;
+        }
+        if(dataValidade.isBefore(hoje.plusDays(7))){
+            return StatusValidade.PERTO_DE_VENCER;
+        }
+
+        return StatusValidade.NORMAL;
+
     }
 
     public Long getId() {
@@ -81,6 +110,22 @@ public class Estoque {
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public LocalDate getDataFabricacao() {
+        return dataFabricacao;
+    }
+
+    public void setDataFabricacao(LocalDate dataFabricacao) {
+        this.dataFabricacao = dataFabricacao;
+    }
+
+    public LocalDate getDataValidade() {
+        return dataValidade;
+    }
+
+    public void setDataValidade(LocalDate dataValidade) {
+        this.dataValidade = dataValidade;
     }
 
     public String getLote() {

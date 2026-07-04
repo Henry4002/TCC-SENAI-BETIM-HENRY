@@ -43,6 +43,7 @@ public class UsuarioService {
 
     public Usuario cadastrarUsuario(Usuario usuario){
 
+        usuario.setEmail(usuario.getEmail().trim().toLowerCase());
         validarEmailDuplicado(usuario.getEmail());
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
