@@ -46,4 +46,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
     }
 
+    @ExceptionHandler(EmailJaCadastradoException.class)
+    public ResponseEntity<ErrorResponse> tratarEmailJaCadastrado(
+            EmailJaCadastradoException ex){
+
+        ErrorResponse erro = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
+
 }

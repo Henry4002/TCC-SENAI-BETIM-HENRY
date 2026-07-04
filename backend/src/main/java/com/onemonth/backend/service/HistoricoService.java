@@ -23,17 +23,7 @@ public class HistoricoService {
         this.repository = repository;
     }
 
-    public void validarHistorico(Historico historico){
-        if(historico.getAcao() == null || historico.getAcao().isBlank()){
-            throw new ValidationException("Ação obrigatória!");
-        }
-        if(historico.getUsuario() == null){
-            throw new ValidationException("Usuário obrigatório!");
-        }
-        if(historico.getProduto() == null){
-            throw new ValidationException("Produto obrigatório!");
-        }
-    }
+
 
     private HistoricoDTO converterParaDTO(Historico historico){
         return new HistoricoDTO(
@@ -46,7 +36,7 @@ public class HistoricoService {
     }
 
     public Historico cadastrarHistorico(Historico historico){
-        validarHistorico(historico);
+
         historico.setDataHistorico(LocalDateTime.now());
 
         return repository.save(historico);
@@ -74,7 +64,7 @@ public class HistoricoService {
     }
 
     public Historico atualizarHistorico(Historico historico){
-        validarHistorico(historico);
+
 
         Historico historicoExistente = repository.findById(historico.getId())
                         .orElseThrow(()-> new ResourceNotFoundException("Histórico não encontrado!"));

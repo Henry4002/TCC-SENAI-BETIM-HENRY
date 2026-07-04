@@ -21,14 +21,7 @@ public class ReceitaService {
         this.repository = repository;
     }
 
-    public void validarReceita(Receita receita){
-        if(receita.getNome() == null || receita.getNome().isBlank()){
-            throw new ValidationException("Nome da receita obrigatório!");
-        }
-        if(receita.getProduto() == null){
-            throw new ValidationException("Produto obrigatório!");
-        }
-    }
+
 
     private ReceitaDTO converterParaDTO(Receita receita){
         return new ReceitaDTO(
@@ -40,7 +33,7 @@ public class ReceitaService {
 
 
     public Receita cadastrarReceita(Receita receita){
-        validarReceita(receita);
+
 
         return repository.save(receita);
     }
@@ -66,7 +59,7 @@ public class ReceitaService {
     }
 
     public Receita atualizarReceita(Receita receita){
-        validarReceita(receita);
+
 
         Receita receitaExistente = repository.findById(receita.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Receita não encontrada!"));

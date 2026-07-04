@@ -4,6 +4,7 @@ package com.onemonth.backend.controller;
 import com.onemonth.backend.dto.ReceitaDTO;
 import com.onemonth.backend.model.Receita;
 import com.onemonth.backend.service.ReceitaService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,12 @@ public class ReceitaController {
     }
 
     @PostMapping
-    public Receita cadastrarReceita(@RequestBody Receita receita){
+    public Receita cadastrarReceita(@Valid @RequestBody Receita receita){
         return service.cadastrarReceita(receita);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Receita> atualizarReceita(@PathVariable Long id, @RequestBody Receita receitaAtualizada){
+    public ResponseEntity<Receita> atualizarReceita(@PathVariable Long id, @Valid @RequestBody Receita receitaAtualizada){
 
         receitaAtualizada.setId(id);
         Receita receita = service.atualizarReceita(receitaAtualizada);

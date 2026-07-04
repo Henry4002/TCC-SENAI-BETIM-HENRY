@@ -2,6 +2,8 @@ package com.onemonth.backend.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +15,7 @@ public class Historico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @NotBlank(message = "A ação é obrigatória!")
     @Column(columnDefinition = "TEXT")
     private String acao;
 
@@ -21,12 +23,12 @@ public class Historico {
     @Column(name = "data_historico")
     private LocalDateTime dataHistorico;
 
-
+    @NotNull(message = "O usuário é obrigatório!")
     @ManyToOne
     @JoinColumn(name = "idUsuario")
     private Usuario usuario;
 
-
+    @NotNull(message = "O produto é obrigatório!")
     @ManyToOne
     @JoinColumn(name = "idProduto")
     private Produto produto;

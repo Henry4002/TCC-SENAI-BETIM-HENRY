@@ -7,16 +7,18 @@ public class EstoqueDTO {
     private LocalDateTime dataAtualizacao;
     private int qtdMinima;
     private int quantidade;
+    private String lote;
     private String produto;
 
     public EstoqueDTO() {
     }
 
-    public EstoqueDTO(Long id, LocalDateTime dataAtualizacao, int qtdMinima, int quantidade, String produto) {
+    public EstoqueDTO(Long id, LocalDateTime dataAtualizacao, int qtdMinima, int quantidade, String lote, String produto) {
         this.id = id;
         this.dataAtualizacao = dataAtualizacao;
         this.qtdMinima = qtdMinima;
         this.quantidade = quantidade;
+        this.lote = lote;
         this.produto = produto;
     }
 
@@ -50,6 +52,14 @@ public class EstoqueDTO {
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public String getLote() {
+        return lote;
+    }
+
+    public void setLote(String lote) {
+        this.lote = lote;
     }
 
     public String getProduto() {

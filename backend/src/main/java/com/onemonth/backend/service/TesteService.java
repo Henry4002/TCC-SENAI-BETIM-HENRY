@@ -23,17 +23,7 @@ public class TesteService {
         this.repository = repository;
     }
 
-    public void validarTeste (Teste teste){
-        if(teste.getResultado() == null || teste.getResultado().isBlank()){
-            throw new ValidationException("Resultado obrigatório!");
-        }
-        if(teste.getUsuario() == null){
-            throw new ValidationException("Usuário obrigatório!");
-        }
-        if(teste.getVersaoReceita() == null){
-            throw new ValidationException("Versão receita obrigatória!");
-        }
-    }
+
 
     private TesteDTO converterParaDTO(Teste teste){
         return new TesteDTO(
@@ -47,7 +37,7 @@ public class TesteService {
     }
 
     public Teste cadastrarTeste(Teste teste){
-        validarTeste(teste);
+
         teste.setDataTeste(LocalDateTime.now());
 
         return repository.save(teste);
@@ -74,7 +64,7 @@ public class TesteService {
     }
 
     public Teste atualizarTeste(Teste teste){
-        validarTeste(teste);
+
 
         Teste testeExistente = repository.findById(teste.getId())
                         .orElseThrow(()-> new ResourceNotFoundException("Teste não encontrado!"));

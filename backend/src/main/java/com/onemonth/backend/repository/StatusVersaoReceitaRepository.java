@@ -1,11 +1,10 @@
 package com.onemonth.backend.repository;
 
-import com.onemonth.backend.model.StatusProduto;
+import com.onemonth.backend.model.StatusVersaoReceita;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface StatusProdutoRepository extends JpaRepository<StatusProduto, Long>{
-
+public interface StatusVersaoReceitaRepository extends JpaRepository <StatusVersaoReceita, Long> {
 }

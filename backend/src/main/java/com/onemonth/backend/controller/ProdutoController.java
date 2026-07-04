@@ -5,6 +5,7 @@ import com.onemonth.backend.dto.ProdutoDTO;
 import com.onemonth.backend.model.Produto;
 
 import com.onemonth.backend.service.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -34,12 +35,12 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public Produto cadastrarProduto(@RequestBody Produto produto){
+    public Produto cadastrarProduto(@Valid @RequestBody Produto produto){
         return service.cadastrarProduto(produto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @RequestBody Produto produtoAtualizado){
+    public ResponseEntity<Produto> atualizarProduto(@PathVariable Long id, @Valid @RequestBody Produto produtoAtualizado){
 
         produtoAtualizado.setId(id);
 

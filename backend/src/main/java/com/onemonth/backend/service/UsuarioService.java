@@ -2,6 +2,7 @@ package com.onemonth.backend.service;
 
 
 import com.onemonth.backend.dto.UsuarioDTO;
+import com.onemonth.backend.exception.EmailJaCadastradoException;
 import com.onemonth.backend.exception.ResourceNotFoundException;
 import com.onemonth.backend.exception.ValidationException;
 import com.onemonth.backend.model.Usuario;
@@ -24,21 +25,6 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void validarUsuario(Usuario usuario){
-
-        if(usuario.getNome() == null || usuario.getNome().isBlank()){
-            throw new ValidationException("Campo nome obrigatório!");
-        }
-        if(usuario.getSenha() == null || usuario.getSenha().isBlank()){
-            throw new ValidationException("Campo senha obrigatório!");
-        }
-        if(usuario.getSenha() != null && usuario.getSenha().length() <4){
-            throw new ValidationException("Senha muito curta!(Minimo 4 caracteres)");
-        }
-        if(usuario.getPerfil() == null){
-            throw new ValidationException("Perfil obrigatório!");
-        }
-    }
 
     private UsuarioDTO converterParaDTO(Usuario usuario){
         return new UsuarioDTO(
@@ -49,9 +35,15 @@ public class UsuarioService {
         );
     }
 
-    public Usuario cadastrarUsuario(Usuario usuario){
-        validarUsuario(usuario);
+    private void validarEmailDuplicado(String email){
+        if(repository.existsByEmail(email)){
+            throw new EmailJaCadastradoException("E-mail já cadastrado no sistema!");
+        }
+    }
 
+    public Usuario cadastrarUsuario(Usuario usuario){
+
+        validarEmailDuplicado(usuario.getEmail());
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
         return repository.save(usuario);
@@ -78,7 +70,7 @@ public class UsuarioService {
     }
 
     public Usuario atualizarUsuario (Usuario usuario){
-        validarUsuario(usuario);
+
 
         Usuario usuarioExistente = repository.findById(usuario.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Usuário não encontrado!"));

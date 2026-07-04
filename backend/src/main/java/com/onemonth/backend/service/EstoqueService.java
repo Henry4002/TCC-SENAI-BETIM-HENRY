@@ -24,15 +24,7 @@ public class EstoqueService {
 
     }
 
-    public void validarEstoque(Estoque estoque){
 
-        if(estoque.getQtdMinima() <= 0 || estoque.getQuantidade() <= 0){
-            throw new ValidationException("Quantidade inválida!");
-        }
-        if(estoque.getProduto()== null){
-            throw new ValidationException("Produto obrigatório!");
-        }
-    }
 
     private EstoqueDTO converterParaDTO(Estoque estoque){
         return new EstoqueDTO(
@@ -40,13 +32,14 @@ public class EstoqueService {
                 estoque.getDataAtualizacao(),
                 estoque.getQtdMinima(),
                 estoque.getQuantidade(),
+                estoque.getLote(),
                 estoque.getProduto().getNome()
         );
     }
 
 
     public Estoque cadastrarEstoque(Estoque estoque){
-        validarEstoque(estoque);
+
 
         estoque.setDataAtualizacao(LocalDateTime.now());
 
@@ -75,7 +68,7 @@ public class EstoqueService {
 
     public Estoque atualizarEstoque(Estoque estoque){
 
-        validarEstoque(estoque);
+
 
         Estoque estoqueExistente = repository.findById(estoque.getId())
                         .orElseThrow(()-> new ResourceNotFoundException("Estoque não encontrado!"));
@@ -83,6 +76,7 @@ public class EstoqueService {
         estoqueExistente.setQuantidade(estoque.getQuantidade());
         estoqueExistente.setQtdMinima(estoque.getQtdMinima());
         estoqueExistente.setProduto(estoque.getProduto());
+        estoqueExistente.setLote(estoque.getLote());
         estoqueExistente.setDataAtualizacao(LocalDateTime.now());
 
         return repository.save(estoqueExistente);

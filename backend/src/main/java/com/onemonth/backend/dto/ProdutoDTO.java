@@ -5,18 +5,21 @@ public class ProdutoDTO {
     private Long id;
     private String nome;
     private String descricao;
+    private String categoria;
     private String usuario;
-    private String statusProduto;
+
+
 
     public ProdutoDTO() {
     }
 
-    public ProdutoDTO(Long id, String nome, String descricao, String usuario, String statusProduto) {
+    public ProdutoDTO(Long id, String nome, String descricao, String categoria, String usuario) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
+        this.categoria = categoria;
         this.usuario = usuario;
-        this.statusProduto = statusProduto;
+
     }
 
     public Long getId() {
@@ -43,6 +46,14 @@ public class ProdutoDTO {
         this.descricao = descricao;
     }
 
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
     public String getUsuario() {
         return usuario;
     }
@@ -51,11 +62,4 @@ public class ProdutoDTO {
         this.usuario = usuario;
     }
 
-    public String getStatusProduto() {
-        return statusProduto;
-    }
-
-    public void setStatusProduto(String statusProduto) {
-        this.statusProduto = statusProduto;
-    }
 }

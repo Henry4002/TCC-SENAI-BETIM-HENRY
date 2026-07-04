@@ -2,6 +2,8 @@ package com.onemonth.backend.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -17,13 +19,16 @@ public class Teste {
     @Column(name = "data_teste", nullable = false)
     private LocalDateTime dataTeste;
 
+    @NotBlank(message = "O resultado é obrigatório!")
     @Column(columnDefinition = "TEXT")
     private String resultado;
 
+    @NotNull(message = "O usuário é obrigatório!")
     @ManyToOne
     @JoinColumn(name = "idUsuario")
     private Usuario usuario;
 
+    @NotNull(message = "A versão-receita é obrigatória!")
     @ManyToOne
     @JoinColumn(name = "idVersao_receita")
     private VersaoReceita versaoReceita;

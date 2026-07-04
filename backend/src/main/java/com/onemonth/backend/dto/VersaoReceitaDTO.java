@@ -9,16 +9,18 @@ public class VersaoReceitaDTO {
     private LocalDate dataVersao;
     private String descricao;
     private String receita;
+    private String status;
 
     public VersaoReceitaDTO() {
     }
 
-    public VersaoReceitaDTO(Long id, int numeroVersao, LocalDate dataVersao, String descricao, String receita) {
+    public VersaoReceitaDTO(Long id, int numeroVersao, LocalDate dataVersao, String descricao, String receita, String status) {
         this.id = id;
         this.numeroVersao = numeroVersao;
         this.dataVersao = dataVersao;
         this.descricao = descricao;
         this.receita = receita;
+        this.status = status;
     }
 
     public Long getId() {
@@ -59,5 +61,13 @@ public class VersaoReceitaDTO {
 
     public void setReceita(String receita) {
         this.receita = receita;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

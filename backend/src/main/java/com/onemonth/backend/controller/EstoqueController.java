@@ -3,6 +3,7 @@ package com.onemonth.backend.controller;
 import com.onemonth.backend.dto.EstoqueDTO;
 import com.onemonth.backend.model.Estoque;
 import com.onemonth.backend.service.EstoqueService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,13 +31,13 @@ public class EstoqueController {
     }
 
     @PostMapping
-    public Estoque cadastrarEstoque(@RequestBody Estoque estoque){
+    public Estoque cadastrarEstoque(@Valid @RequestBody Estoque estoque){
 
         return service.cadastrarEstoque(estoque);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Estoque> atualizarEstoque(@PathVariable Long id, @RequestBody Estoque estoqueAtualizado){
+    public ResponseEntity<Estoque> atualizarEstoque(@PathVariable Long id, @Valid @RequestBody Estoque estoqueAtualizado){
 
         estoqueAtualizado.setId(id);
 

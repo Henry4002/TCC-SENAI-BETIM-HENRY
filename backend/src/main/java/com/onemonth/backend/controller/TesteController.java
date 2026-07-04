@@ -4,6 +4,7 @@ package com.onemonth.backend.controller;
 import com.onemonth.backend.dto.TesteDTO;
 import com.onemonth.backend.model.Teste;
 import com.onemonth.backend.service.TesteService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,12 +34,12 @@ public class TesteController {
     }
 
     @PostMapping
-    public Teste cadastrarTeste(@RequestBody Teste teste){
+    public Teste cadastrarTeste(@Valid @RequestBody Teste teste){
         return service.cadastrarTeste(teste);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Teste> atualizarTeste(@PathVariable Long id, @RequestBody Teste testeAtualizado){
+    public ResponseEntity<Teste> atualizarTeste(@PathVariable Long id, @Valid @RequestBody Teste testeAtualizado){
 
         testeAtualizado.setId(id);
         Teste teste = service.atualizarTeste(testeAtualizado);

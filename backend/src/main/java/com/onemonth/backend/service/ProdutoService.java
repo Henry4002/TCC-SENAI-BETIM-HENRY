@@ -21,33 +21,20 @@ public class ProdutoService {
         this.repository = repository;
     }
 
-    public void validarProduto(Produto produto){
-        if(produto.getNome() == null || produto.getNome().isBlank()){
-            throw new ValidationException("Campo nome é obrigatório!");
-        }
-        if(produto.getDescricao() == null || produto.getDescricao().isBlank()){
-            throw new ValidationException("Campo descrição é obrigatório!");
-        }
-        if(produto.getStatusProduto() == null){
-            throw new ValidationException("Status obrigatório!");
-        }
-        if(produto.getUsuario() == null){
-            throw new ValidationException("Usuário obrigatório!");
-        }
-    }
 
     private ProdutoDTO converterParaDTO(Produto produto){
         return new ProdutoDTO(
                 produto.getId(),
                 produto.getNome(),
                 produto.getDescricao(),
-                produto.getUsuario().getNome(),
-                produto.getStatusProduto().getNome()
+                produto.getCategoria(),
+                produto.getUsuario().getNome()
+
         );
     }
 
     public Produto cadastrarProduto(Produto produto){
-        validarProduto(produto);
+
 
         return repository.save(produto);
     }
@@ -73,16 +60,15 @@ public class ProdutoService {
 
     public Produto atualizarProduto (Produto produto){
 
-        validarProduto(produto);
+
 
         Produto produtoExistente = repository.findById(produto.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Produto não encontrado!"));
 
         produtoExistente.setNome(produto.getNome());
         produtoExistente.setDescricao(produto.getDescricao());
+        produtoExistente.setCategoria(produto.getCategoria());
         produtoExistente.setUsuario(produto.getUsuario());
-        produtoExistente.setStatusProduto(produto.getStatusProduto());
-
 
         return repository.save(produtoExistente);
     }

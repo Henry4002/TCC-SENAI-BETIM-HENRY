@@ -22,17 +22,7 @@ public class VersaoReceitaService {
         this.repository = repository;
     }
 
-    public void validarVersaoReceita(VersaoReceita versaoReceita){
-        if(versaoReceita.getNumeroVersao() <=0){
-            throw new ValidationException("Número versão inválido!");
-        }
-        if(versaoReceita.getDescricao() == null || versaoReceita.getDescricao().isBlank()){
-            throw new ValidationException("Descrição obrigatória!");
-        }
-        if(versaoReceita.getReceita() == null){
-            throw new ValidationException("Receita obrigatória!");
-        }
-    }
+
 
     private VersaoReceitaDTO converterParaDTO(VersaoReceita versaoReceita){
         return new VersaoReceitaDTO(
@@ -40,12 +30,13 @@ public class VersaoReceitaService {
                 versaoReceita.getNumeroVersao(),
                 versaoReceita.getDataVersao(),
                 versaoReceita.getDescricao(),
-                versaoReceita.getReceita().getNome()
+                versaoReceita.getReceita().getNome(),
+                versaoReceita.getStatusVersaoReceita().getNome()
         );
     }
 
     public VersaoReceita cadastrarVersaoReceita(VersaoReceita versaoReceita){
-        validarVersaoReceita(versaoReceita);
+
 
         versaoReceita.setDataVersao(LocalDate.now());
 
@@ -73,7 +64,7 @@ public class VersaoReceitaService {
     }
 
     public VersaoReceita atualizarVersaoReceita(VersaoReceita versaoReceita){
-        validarVersaoReceita(versaoReceita);
+
 
         VersaoReceita versaoReceitaExistente = repository.findById(versaoReceita.getId())
                         .orElseThrow(()-> new ResourceNotFoundException("Versão-receita não encontrada!"));

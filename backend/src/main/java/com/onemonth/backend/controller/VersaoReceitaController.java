@@ -4,6 +4,7 @@ package com.onemonth.backend.controller;
 import com.onemonth.backend.dto.VersaoReceitaDTO;
 import com.onemonth.backend.model.VersaoReceita;
 import com.onemonth.backend.service.VersaoReceitaService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,12 @@ public class VersaoReceitaController {
     }
 
     @PostMapping
-    public VersaoReceita cadastrarVersaoReceita(@RequestBody VersaoReceita versaoReceita){
+    public VersaoReceita cadastrarVersaoReceita(@Valid @RequestBody VersaoReceita versaoReceita){
         return service.cadastrarVersaoReceita(versaoReceita);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VersaoReceita> atualizarVersaoReceita(@PathVariable Long id, @RequestBody VersaoReceita versaoReceitaAtualizada){
+    public ResponseEntity<VersaoReceita> atualizarVersaoReceita(@PathVariable Long id, @Valid @RequestBody VersaoReceita versaoReceitaAtualizada){
 
         versaoReceitaAtualizada.setId(id);
         VersaoReceita versaoReceita = service.atualizarVersaoReceita(versaoReceitaAtualizada);

@@ -2,9 +2,12 @@ package com.onemonth.backend.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
-import java.util.Date;
+
 
 @Entity
 @Table(name = "versao_receita")
@@ -15,18 +18,26 @@ public class VersaoReceita {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Positive(message = "O número da versão deve ser maior que zero!")
     @Column(name = "numero_versao", nullable = false)
     private int numeroVersao;
 
     @Column(name = "data_versao", nullable = false)
     private LocalDate dataVersao;
 
+    @NotBlank(message = "A descrição é obrigatória!")
     @Column(columnDefinition = "TEXT")
     private String descricao;
 
+    @NotNull(message = "A receita é obrigatória!")
     @ManyToOne
     @JoinColumn(name = "idReceita")
     private Receita receita;
+
+    @NotNull(message = "O status é obrigatório!")
+    @ManyToOne
+    @JoinColumn(name = "idStatus")
+    private StatusVersaoReceita statusVersaoReceita;
 
     public VersaoReceita() {
     }
@@ -69,5 +80,13 @@ public class VersaoReceita {
 
     public void setReceita(Receita receita) {
         this.receita = receita;
+    }
+
+    public StatusVersaoReceita getStatusVersaoReceita() {
+        return statusVersaoReceita;
+    }
+
+    public void setStatusVersaoReceita(StatusVersaoReceita statusVersaoReceita) {
+        this.statusVersaoReceita = statusVersaoReceita;
     }
 }

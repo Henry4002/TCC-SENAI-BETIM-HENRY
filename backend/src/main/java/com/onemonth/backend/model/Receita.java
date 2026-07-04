@@ -2,6 +2,8 @@ package com.onemonth.backend.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "receita")
@@ -11,10 +13,11 @@ public class Receita {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @NotBlank(message = "O nome da receita é obrigatório!")
     @Column(name = "nome", nullable = false)
     private String nome;
 
+    @NotNull(message = "O produto é obrigatório!")
     @ManyToOne
     @JoinColumn(name = "idProduto")
     private Produto produto;

@@ -4,6 +4,7 @@ package com.onemonth.backend.controller;
 import com.onemonth.backend.model.Perfil;
 import com.onemonth.backend.repository.PerfilRepository;
 import com.onemonth.backend.service.PerfilService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +33,13 @@ public class PerfilController {
     }
 
     @PostMapping
-    public Perfil cadastrarPerfil(@RequestBody Perfil perfil){
+    public Perfil cadastrarPerfil(@Valid @RequestBody Perfil perfil){
 
         return service.cadastrarPerfil(perfil);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Perfil> atualizarPerfil (@RequestBody Perfil perfilAtualizado, @PathVariable Long id){
+    public ResponseEntity<Perfil> atualizarPerfil (@Valid @RequestBody Perfil perfilAtualizado, @PathVariable Long id){
 
         perfilAtualizado.setId(id);
 

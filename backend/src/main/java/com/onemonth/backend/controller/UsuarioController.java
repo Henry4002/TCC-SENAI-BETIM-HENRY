@@ -4,6 +4,7 @@ package com.onemonth.backend.controller;
 import com.onemonth.backend.dto.UsuarioDTO;
 import com.onemonth.backend.model.Usuario;
 import com.onemonth.backend.service.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,12 +34,12 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public Usuario cadastrarUsuario(@RequestBody Usuario usuario){
+    public Usuario cadastrarUsuario(@Valid @RequestBody Usuario usuario){
         return service.cadastrarUsuario(usuario);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado){
+    public ResponseEntity<Usuario> atualizarUsuario(@PathVariable Long id, @Valid @RequestBody Usuario usuarioAtualizado){
 
         usuarioAtualizado.setId(id);
         Usuario usuario = service.atualizarUsuario(usuarioAtualizado);

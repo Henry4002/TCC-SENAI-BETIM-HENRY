@@ -4,6 +4,7 @@ package com.onemonth.backend.controller;
 import com.onemonth.backend.dto.HistoricoDTO;
 import com.onemonth.backend.model.Historico;
 import com.onemonth.backend.service.HistoricoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,12 @@ public class HistoricoController {
     }
 
     @PostMapping
-    public Historico cadastrarHistorico(@RequestBody Historico historico){
+    public Historico cadastrarHistorico(@Valid @RequestBody Historico historico){
         return service.cadastrarHistorico(historico);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Historico> atualizarHistorico(@PathVariable Long id, @RequestBody Historico historicoAtualizado){
+    public ResponseEntity<Historico> atualizarHistorico(@PathVariable Long id, @Valid @RequestBody Historico historicoAtualizado){
 
         historicoAtualizado.setId(id);
         Historico historico = service.atualizarHistorico(historicoAtualizado);

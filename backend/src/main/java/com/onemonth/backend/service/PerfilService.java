@@ -18,17 +18,11 @@ public class PerfilService {
         this.repository = repository;
     }
 
-    public void validarPerfil (Perfil perfil){
 
-        if(perfil.getNome() == null || perfil.getNome().isBlank()){
-            throw new ValidationException("Campo nome obrigatório!");
-        }
-
-    }
 
     public Perfil cadastrarPerfil (Perfil perfil){
 
-        validarPerfil(perfil);
+
 
         return repository.save(perfil);
     }
@@ -50,7 +44,7 @@ public class PerfilService {
 
     public Perfil atualizarPerfil (Perfil perfil){
 
-        validarPerfil(perfil);
+
 
         Perfil perfilExistente = repository.findById(perfil.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("Perfil não encontrado!"));
