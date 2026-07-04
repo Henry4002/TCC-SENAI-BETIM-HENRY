@@ -63,11 +63,10 @@
             box-shadow: 0 0 0 2px rgba(222, 158, 82, 0.2);
         }
 
-        #camposExclusivosEntrada {
+        aside ul li {
+            white-space: nowrap;
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-            width: 100%;
+            align-items: center;
         }
     </style>
 </head>
@@ -103,13 +102,11 @@
                 <ul>
                     <li tabindex="0"><i class="fa-solid fa-house" aria-hidden="true"></i>Início</li>
                     <li tabindex="0"><i class="fa-solid fa-box" aria-hidden="true"></i>Produtos</li>
-                    <li><a href="#"><i class="fa-solid fa-kitchen-set"></i> Receitas</a></li>
-                    <li><a href="#"><i class="fa-solid fa-code-branch"></i> Versões</a></li>
-                    <li><a href="#"><i class="fa-solid fa-gears"></i> Produção</a></li>
-                    <li><a href="#"><i class="fa-solid fa-cubes"></i> Estoque</a></li>
-                    <li><a href="#"><i class="fa-solid fa-users"></i> Usuários</a></li>
-                    <li><a href="#"><i class="fa-solid fa-sliders"></i> Configuração</a></li>
-                    <li tabindex="0" class="Ativo"><i class="fa-solid fa-cubes-stacked" aria-hidden="true"></i>Estoque</li>
+                    <li tabindex="0" class="itemAtivo"><i class="fa-solid fa-cubes-stacked" aria-hidden="true"></i>Estoque</li>
+                    <li tabindex="0"></li>
+                    <li tabindex="0"></li>
+                    <li tabindex="0"></li>
+                    <li tabindex="0"></li>
                 </ul>
             </nav>
         </aside>
@@ -120,27 +117,25 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                     <input type="text" id="buscaEstoque" placeholder="Filtrar por produto ou lote...">
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button id="btnEntrada" class="btn-principal" style="background-color: #28a745;">
-                        <i class="fa-solid fa-plus-circle"></i> Entrada de Lote
-                    </button>
-                    <button id="btnSaida" class="btn-principal" style="background-color: #dc3545;">
-                        <i class="fa-solid fa-minus-circle"></i> Baixar Unidades
-                    </button>
-                </div>
+                <button id="btnMovimentar" class="btn-principal" style="background-color: #28a745;">
+                    <i class="fa-solid fa-boxes-stacked"></i> Entrada de Lote</button>
             </div>
 
             <section class="atividades">
-                <h3>Lotes Ativos no Inventário</h3>
+                <h3>Resumo de Saldo por Produto</h3>
+            <div id ="cardsConsolidados" style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 25px;"></div>
+                
+            <h3>Ciclo de Vida do Inventário</h3>
                 <table>
                     <thead>
                         <tr>
-                            <th>Código ID / Lote</th>
-                            <th>Produto Base</th>
+                            <th>ID Estoque</th>
+                            <th>Produto</th>
                             <th>Qtd Mínima Alvo</th>
-                            <th>Saldo do Lote</th>
-                            <th>Validade</th>
-                            <th>Situação</th>
+                            <th>Saldo Atual</th>
+                            <th>Data de Fabricação</th> <th>Validade</th>
+                            <th>Status (Ciclo de Vida)</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="tabelaEstoqueBody">
@@ -153,41 +148,41 @@
     <div id="modalMovimentacao" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalMovTitulo">Registrar Movimentação</h2>
+                <h2 id="modalMovTitulo">Atualizar Dados de Estoque</h2>
                 <button type="button" id="btnFecharMov" class="btn-fechar">&times;</button>
             </div>
             
             <form id="formMovimentacao">
-                <input type="hidden" id="movTipo" value="ENTRADA">
+                <input type="hidden" id="editIndex" value="">
 
                 <div class="form-group">
-                    <label id="lblSelectProduto" for="movProduto">Selecionar Produto Base</label>
+                    <label for="movProduto">Selecionar Produto Base</label>
                     <select id="movProduto" required></select>
                 </div>
 
-                <div id="camposExclusivosEntrada">
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="movLoteNome">Código do Novo Lote</label>
-                        <input type="text" id="movLoteNome" placeholder="Ex: LT-PF-02">
+                        <label for="movQtdMinima">Qtd Mínima Alvo</label>
+                        <input type="number" id="movQtdMinima" min="0" required placeholder="Ex: 10">
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="movFab">Fabricação</label>
-                            <input type="date" id="movFab">
-                        </div>
-                        <div class="form-group">
-                            <label for="movVal">Validade</label>
-                            <input type="date" id="movVal">
-                        </div>
+                    <div class="form-group">
+                        <label for="movQuantidade">Quantidade Atual</label>
+                        <input type="number" id="movQuantidade" min="0" required placeholder="Ex: 50">
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="movQuantidade">Quantidade (unidades)</label>
-                    <input type="number" id="movQuantidade" min="1" required placeholder="Ex: 50">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="movFab">Data Fabricação</label>
+                        <input type="date" id="movFab" max="9999-12-31" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="movVal">Data Validade</label>
+                        <input type="date" id="movVal" max="9999-12-31" required>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn-salvar" style="width: 100%; margin-top: 10px; background-color: #DE9E52;">Processar Movimentação</button>
+                <button type="submit" class="btn-salvar" style="width: 100%; margin-top: 10px; background-color: #DE9E52;">Salvar no Estoque</button>
             </form>
         </div>
     </div>

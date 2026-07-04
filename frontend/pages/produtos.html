@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OneMonth - Produtos</title>
-<link rel="stylesheet" href="../css/telaInicial.css"> <link rel="stylesheet" href="../css/produtos.css">
+    <link rel="stylesheet" href="../css/telaInicial.css"> 
+    <link rel="stylesheet" href="../css/produtos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
     <header role="banner">
-        <h2>Gestão de Produtos</h2>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button id="btnMenuMobile" aria-expanded="false" aria-controls="menuLateral" aria-label="Abrir menu de navegação" class="btn-menu-mobile">
+                <i class="fa-solid fa-bars" aria-hidden="true"></i>
+            </button>
+            <h2>Gestão de Produtos</h2>
+        </div>
         <div class="usuario">
             <div class="perfil">
                 <i class="fa-regular fa-circle-user" aria-hidden="true"></i>
                 <span>Leandro</span>
             </div>
-        <a href="login.html" id="btnLogout" aria-label="Sair do sistema">
-        Deslogar
-            <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
-        </a>    
+            <a href="login.html" id="btnLogout" aria-label="Sair do sistema">
+                Deslogar
+                <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+            </a>    
         </div>
     </header>
 
@@ -31,28 +37,14 @@
                 <p>Sistema de gestão do ciclo de vida de produtos</p>
             </div>
             <nav aria-label="Navegação Principal">
-                <style>
-                    /* Garante que o link ocupa o botão inteiro e mantém o teu layout */
-                    aside ul li a {
-                        text-decoration: none;
-                        color: inherit;
-                        display: flex;
-                        align-items: center;
-                        gap: 10px;
-                        width: 100%;
-                        height: 100%;
-                        outline: none;
-                    }
-                </style>
                 <ul>
-                    <li><a href="telaInicial.html"><i class="fa-solid fa-house"></i> Início</a></li>
-                    <li><a href="produtos.html"><i class="fa-solid fa-boxes-stacked"></i> Produtos</a></li>
-                    <li><a href="#"><i class="fa-solid fa-kitchen-set"></i> Receitas</a></li>
-                    <li><a href="#"><i class="fa-solid fa-code-branch"></i> Versões</a></li>
-                    <li><a href="#"><i class="fa-solid fa-gears"></i> Produção</a></li>
-                    <li><a href="#"><i class="fa-solid fa-cubes"></i> Estoque</a></li>
-                    <li><a href="#"><i class="fa-solid fa-users"></i> Usuários</a></li>
-                    <li><a href="#"><i class="fa-solid fa-sliders"></i> Configuração</a></li>
+                    <li tabindex="0"><i class="fa-solid fa-house" aria-hidden="true"></i>Início</li>
+                    <li tabindex="0" class="itemAtivo"><i class="fa-solid fa-box" aria-hidden="true"></i>Produtos</li>
+                    <li tabindex="0"><i class="fa-solid fa-cubes-stacked" aria-hidden="true"></i>Estoque</li>
+                    <li tabindex="0"></li>
+                    <li tabindex="0"></li>
+                    <li tabindex="0"></li>
+                    <li tabindex="0"></li>
                 </ul>
             </nav>
         </aside>
@@ -61,22 +53,21 @@
             <div class="acoes-produtos">
                 <div class="busca-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="inputBusca" placeholder="Pesquisar produto pelo nome...">
+                    <input type="text" id="buscaProduto" placeholder="Buscar produto por nome...">
                 </div>
-                <button id="btnAbrirModal" class="btn-principal">
-                    <i class="fa-solid fa-plus"></i> Cadastrar Produto
+                <button id="btnNovoProduto" class="btn-principal">
+                    <i class="fa-solid fa-plus"></i> Novo Produto
                 </button>
             </div>
 
-            <section class="listagem-produtos">
+            <section class="atividades">
+                <h3>Produtos Cadastrados</h3>
                 <table>
                     <thead>
                         <tr>
-                            <th>Código</th>
-                            <th>Lote de Produção</th>
+                            <th>ID</th>
                             <th>Nome do Produto</th>
-                            <th>Categoria</th>
-                            <th>Estoque Mínimo</th>
+                            <th>Descrição</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -85,59 +76,26 @@
                 </table>
             </section>
         </main>
+    </div>
+
     <div id="modalCadastro" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
-        <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitulo">Novo Produto Inteligente</h2>
+                <h2>Cadastrar Novo Produto</h2>
                 <button type="button" id="btnFecharModal" class="btn-fechar">&times;</button>
             </div>
-            
-            <form id="formProduto">
-                <input type="hidden" id="prodIndexEdicao" value="">
-
+            <form id="formCadastroProduto">
                 <div class="form-group">
                     <label for="prodNome">Nome do Produto</label>
                     <input type="text" id="prodNome" required placeholder="Ex: Pão de Forma Integral">
                 </div>
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="prodLote">Lote de Production</label>
-                        <input type="text" id="prodLote" required placeholder="Ex: LT-PFI-2026-01">
-                    </div>
-                    <div class="form-group">
-                        <label for="prodCategoria">Categoria</label>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <select id="prodCategoria" required style="flex: 1;">
-                                </select>
-                            <button type="button" id="btnNovaCategoria" title="Criar Nova Categoria" style="background: #331E11; color: white; border: none; height: 40px; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.2rem;">+</button>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="prodDescricao">Descrição do Produto</label>
+                    <textarea id="prodDescricao" required placeholder="Ex: Produzido com farinha 100% integral, macio e sem conservantes." rows="4" style="width: 100%; padding: 10px; border: 1px solid rgba(51,30,17,0.15); border-radius: 6px; font-family: inherit; resize: vertical;"></textarea>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="prodAtual">Unidades do Lote (Estoque Atual)</label>
-                        <input type="number" id="prodAtual" min="0" required placeholder="Ex: 50">
-                    </div>
-                    <div class="form-group">
-                        <label for="prodMinimo">Estoque Mínimo Alvo</label>
-                        <input type="number" id="prodMinimo" min="1" required placeholder="Ex: 20">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="prodFabricacao">Data de Produção</label>
-                        <input type="date" id="prodFabricacao" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="prodValidade">Data de Validade</label>
-                        <input type="date" id="prodValidade" required>
-                    </div>
-                </div>
-
-                <button type="submit" id="btnSalvarProduto" class="btn-salvar" style="width: 100%; margin-top: 15px;">Salvar no Banco Local</button>
+                <button type="submit" class="btn-salvar" style="background-color: #DE9E52; margin-top: 10px;">Salvar Produto</button>
             </form>
         </div>
     </div>
