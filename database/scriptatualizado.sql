@@ -6,6 +6,11 @@ CREATE TABLE perfil (
     nome VARCHAR(100) NOT NULL
 );
 
+CREATE TABLE status_versao_receita (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE usuario (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
@@ -15,18 +20,12 @@ CREATE TABLE usuario (
     FOREIGN KEY (idPerfil) REFERENCES perfil(id)
 );
 
-CREATE TABLE status_produto (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(100) NOT NULL
-);
-
 CREATE TABLE produto (
     id INT PRIMARY KEY AUTO_INCREMENT,
     descricao TEXT NOT NULL,
     nome VARCHAR(100) NOT NULL,
-    idStatus INT NOT NULL,
+    categoria VARCHAR(100) NOT NULL,
     idUsuario INT NOT NULL,
-    FOREIGN KEY (idStatus) REFERENCES status_produto(id),
     FOREIGN KEY (idUsuario) REFERENCES usuario(id)
 );
 
@@ -35,6 +34,8 @@ CREATE TABLE estoque (
     data_atualizacao DATETIME NOT NULL,
     qtd_minima INT NOT NULL,
     quantidade INT NOT NULL,
+    lote VARCHAR(100) NOT NULL,
+    data_validade DATE NOT NULL,
     idProduto INT NOT NULL UNIQUE,
     FOREIGN KEY (idProduto) REFERENCES produto(id)
 );
@@ -52,7 +53,10 @@ CREATE TABLE versao_receita (
     data_versao DATE NOT NULL,
     descricao TEXT NOT NULL,
     idReceita INT NOT NULL,
-    FOREIGN KEY (idReceita) REFERENCES receita(id)
+    idStatusVersaoReceita INT NOT NULL,
+    FOREIGN KEY (idReceita) REFERENCES receita(id),
+    FOREIGN KEY (idStatusVersaoReceita) REFERENCES status_versao_receita(id)
+    
 );
 
 CREATE TABLE teste (
