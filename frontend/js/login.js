@@ -78,20 +78,12 @@ gmail.addEventListener("input", () => {
 
 // Validação da senha
 senha.addEventListener("input", () => {
-    const valor = senha.value.trim();
-
-    if (valor.length === 0) {
+    if (senha.value.trim().length === 0) {
         erroSenha.style.display = "none";
         senha.parentElement.classList.remove("erroCampo", "sucesso");
-    } else if (valor.length < 6 || valor.length > 12) {
-        mostrarErro(
-            erroSenha,
-            senha,
-            "A senha deve possuir entre 6 e 12 caracteres."
-        );
     } else {
         erroSenha.style.display = "none";
-        mostrarSucesso(senha);
+        senha.parentElement.classList.remove("erroCampo");
     }
 });
 
@@ -140,17 +132,14 @@ formLogin.addEventListener("submit", async function (event) {
     }
 
     // Senha
-    if (
-        senha.value.trim().length < 6 ||
-        senha.value.trim().length > 12
-    ) {
-        mostrarErro(
-            erroSenha,
-            senha,
-            "A senha deve possuir entre 6 e 12 caracteres."
-        );
-        formularioValido = false;
-    }
+    if (senha.value.trim() === "") {
+    mostrarErro(
+        erroSenha,
+        senha,
+        "Digite sua senha."
+    );
+    formularioValido = false;
+}
 
     // Se houver erro, não continua
     if (!formularioValido) {
