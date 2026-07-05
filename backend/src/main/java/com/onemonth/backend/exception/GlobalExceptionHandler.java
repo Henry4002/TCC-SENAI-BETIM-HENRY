@@ -81,7 +81,7 @@ public class GlobalExceptionHandler {
 
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
-                "Conflito de integridadeNão é possível excluir este registro, pois ele está vinculado a outros dados do sistema."
+                "Não foi possível concluir a operação devido a uma restrição da integridade dos dados."
         );
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
