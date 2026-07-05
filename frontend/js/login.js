@@ -181,7 +181,7 @@ formLogin.addEventListener("submit", async function (event) {
 
         const usuario = await resposta.json();
 
-        localStorage.setItem("Usuario", JSON.stringify(usuario));
+        localStorage.setItem("usuario", JSON.stringify(usuario));
         localStorage.setItem("logado", "true");
 
         window.location.href = "telainicial.html";

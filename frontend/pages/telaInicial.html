@@ -20,7 +20,7 @@
         <div class="usuario">
             <div class="perfil">
                 <i class="fa-regular fa-circle-user" aria-hidden="true"></i>
-                <span>Leandro</span>
+                <span id="nomeUsuario" ></span>
             </div>
             <a href="login.html" id="btnLogout" aria-label="Sair do sistema">
                 Deslogar <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
@@ -71,16 +71,15 @@
                 <table>
                     <thead>
                         <tr>
-                            <th scope="col">Código</th>
-                            <th scope="col">Responsável</th>
+                            <th scope="col">Lote</th>
                             <th scope="col">Produto</th>
                             <th scope="col">Quantidade</th>
+                            <th scope="col">Fabricação</th>
                             <th scope="col">Vencimento</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr><td>124142</td><td>Leandro</td><td>Pão</td><td>12</td><td>12/06/2026</td></tr>
-                        <tr><td>124141</td><td>Leandro</td><td>Rosca</td><td>4</td><td>04/07/2026</td></tr>
+                    <tbody id="tabelaUltimosLotes">
+
                     </tbody>
                 </table>
             </section>
