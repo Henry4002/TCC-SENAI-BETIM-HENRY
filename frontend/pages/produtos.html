@@ -104,7 +104,7 @@
         <div class="usuario" style="display: flex; gap: 20px; align-items: center;">
             <div class="perfil">
                 <i class="fa-regular fa-circle-user"></i>
-                <span>Leandro</span>
+                <span id="nomeUsuario"></span>
             </div>
             <a href="login.html" id="btnLogout">
                 Deslogar <i class="fa-solid fa-right-from-bracket"></i>
@@ -135,8 +135,10 @@
                 <table>
                     <thead>
                         <tr>
-                            <th style="width: 40%;">Nome do Produto</th>
-                            <th style="width: 60%;">Descrição</th>
+                            <th style="width: 30%;">Nome do Produto</th>
+                            <th style="width: 45%;">Descrição</th>
+                            <th style="width: 15%;">Categoria</th>
+                            <th style="width: 10%;">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="tabelaProdutosBody">
@@ -162,6 +164,11 @@
                 <div class="form-group">
                     <label for="prodDescricao">Descrição do Produto</label>
                     <textarea id="prodDescricao" required placeholder="Ex: Produzido com farinha 100% integral, macio e sem conservantes." rows="4" style="resize: vertical;"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="prodCategoria">Categoria do Produto</label>
+                    <input type="text" id="prodCategoria" required placeholder="Ex: Confeitaria, Panificação, Salgados">
                 </div>
 
                 <button type="submit" style="width: 100%; margin-top: 10px; padding: 14px; background-color: #DE9E52; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; color: #331E11; cursor: pointer;">

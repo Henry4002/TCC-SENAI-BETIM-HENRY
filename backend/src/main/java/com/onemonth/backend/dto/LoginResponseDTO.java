@@ -2,6 +2,7 @@ package com.onemonth.backend.dto;
 
 public class LoginResponseDTO {
 
+    private Long id;
     private String mensagem;
     private String nome;
     private String perfil;
@@ -9,7 +10,8 @@ public class LoginResponseDTO {
     public LoginResponseDTO() {
     }
 
-    public LoginResponseDTO(String mensagem, String nome, String perfil) {
+    public LoginResponseDTO(Long id,String mensagem, String nome, String perfil) {
+        this.id = id;
         this.mensagem = mensagem;
         this.nome = nome;
         this.perfil = perfil;
@@ -17,6 +19,14 @@ public class LoginResponseDTO {
 
     public String getMensagem() {
         return mensagem;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setMensagem(String mensagem) {

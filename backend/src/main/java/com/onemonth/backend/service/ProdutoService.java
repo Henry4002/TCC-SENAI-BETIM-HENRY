@@ -34,8 +34,6 @@ public class ProdutoService {
     }
 
     public Produto cadastrarProduto(Produto produto){
-
-
         return repository.save(produto);
     }
 

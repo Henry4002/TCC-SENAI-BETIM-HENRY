@@ -31,6 +31,7 @@ public class AuthService {
         }
 
         return new LoginResponseDTO(
+                usuario.getId(),
                 "Login realizado com sucesso!",
                 usuario.getNome(),
                 usuario.getPerfil().getNome()
