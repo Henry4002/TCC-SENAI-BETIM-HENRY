@@ -36,6 +36,7 @@ CREATE TABLE estoque (
     quantidade INT NOT NULL,
     lote VARCHAR(100) NOT NULL,
     data_validade DATE NOT NULL,
+    data_fabricacao DATE NOT NULL,
     idProduto INT NOT NULL UNIQUE,
     FOREIGN KEY (idProduto) REFERENCES produto(id)
 );
