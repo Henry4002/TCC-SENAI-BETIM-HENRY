@@ -1,4 +1,6 @@
 // Seleção dos elementos
+const API_URL = "https://projeto-tcc-senai-production.up.railway.app"
+
 const formLogin = document.getElementById("formLogin");
 
 const gmail = document.getElementById("gmail"); 
@@ -121,7 +123,7 @@ esqueciSenha.addEventListener("click", (event) => {
 
 
 // Envio do formulário
-formLogin.addEventListener("submit", function (event) {
+formLogin.addEventListener("submit", async function (event) {
     event.preventDefault();
     limparErros();
 
@@ -155,14 +157,52 @@ formLogin.addEventListener("submit", function (event) {
         return;
     }
 
-    // Simulação de login
+    //Login
+    
     botao.disabled = true;
     botao.textContent = "Entrando...";
 
-    setTimeout(() => {
-        localStorage.setItem("usuarioLogado", gmail.value);
+    try{
+
+        const resposta = await fetch(`${API_URL}/auth/login`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                email: gmail.value.trim(),
+                senha: senha.value.trim()
+            })
+        });
+
+        if(!resposta.ok){
+
+            const erro = await resposta.json();
+
+            mostrarErro(
+                erroSenha,
+                senha,
+                erro.message || "E-mail ou senha inválidos."
+            );
+
+            botao.disabled = false;
+            botao.textContent = "Entrar";
+            return;
+        }
+
+        const usuario = await resposta.json();
+
+        localStorage.setItem("Usuario", JSON.stringify(usuario));
         localStorage.setItem("logado", "true");
 
-        window.location.href = "telaInicial.html";
-    }, 1500);
+        window.location.href = "telainicial.html";
+
+    }catch(e) {
+
+        alert("Erro ao conectar com o servidor.");
+
+        botao.disabled = false;
+        botao.textContent = "Entrar";
+    }
+
 });
