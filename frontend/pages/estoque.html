@@ -9,64 +9,89 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        .modal-content {
-            background-color: #FDFBF9;
-            width: 100%;
-            max-width: 460px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        body {
+            /* Fundo harmônico e escuro por trás do painel translúcido */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/bakery.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
         }
 
-        #formMovimentacao {
+        /* Cabeçalho Profissional */
+        header {
+            background-color: #331E11;
+            color: #ffffff;
+            padding: 15px 30px;
             display: flex;
-            flex-direction: column;
-            gap: 16px; 
-            margin-top: 15px;
-        }
-
-        #formMovimentacao .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            width: 100%;
-        }
-
-        #formMovimentacao .form-row {
-            display: flex;
-            gap: 15px;
-            width: 100%;
-        }
-
-        #formMovimentacao label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #331E11;
-        }
-
-        #formMovimentacao input, 
-        #formMovimentacao select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid rgba(51, 30, 17, 0.2);
-            border-radius: 6px;
-            font-size: 0.95rem;
-            background-color: #fff;
-            color: #331E11;
-            outline: none;
-            box-sizing: border-box; 
-        }
-
-        #formMovimentacao input:focus, 
-        #formMovimentacao select:focus {
-            border-color: #DE9E52;
-            box-shadow: 0 0 0 2px rgba(222, 158, 82, 0.2);
-        }
-
-        aside ul li {
-            white-space: nowrap;
-            display: flex;
+            justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        header h2 { margin: 0; color: #DE9E52; }
+        header a { color: #ffffff; text-decoration: none; }
+
+        /* Área Principal com Efeito Vidro (Glassmorphism) */
+        main {
+            background-color: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top-left-radius: 20px;
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        /* Tabela Organizada */
+        .tabela-container {
+            background: #ffffff; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.08);
+            margin-top: 20px;
+        }
+
+        .tabela-container table { width: 100%; border-collapse: collapse; }
+        .tabela-container table th {
+            background-color: #331E11; 
+            color: #ffffff;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 18px 16px;
+            text-align: left;
+        }
+        .tabela-container table td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+            color: #444;
+        }
+        .tabela-container table tr:hover td { background-color: #faf8f5; }
+
+        /* Modais Refinados */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-overlay.ativo { display: flex; }
+        .modal-content {
+            background-color: #ffffff; width: 100%; max-width: 500px; padding: 35px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid #eee;
+        }
+        
+        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; width: 100%; }
+        .form-row { display: flex; gap: 15px; width: 100%; }
+        
+        .form-group label { font-weight: 600; color: #331E11; font-size: 0.9rem; }
+        .form-group input, .form-group select {
+            padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none; transition: 0.3s; font-family: inherit; background-color: #fff; color: #331E11; box-sizing: border-box; width: 100%;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #DE9E52; box-shadow: 0 0 0 3px rgba(222, 158, 82, 0.1);
         }
     </style>
 </head>
@@ -74,68 +99,58 @@
 
     <header role="banner">
         <div style="display: flex; align-items: center; gap: 15px;">
-            <button id="btnMenuMobile" aria-expanded="false" aria-controls="menuLateral" aria-label="Abrir menu de navegação" class="btn-menu-mobile">
-                <i class="fa-solid fa-bars" aria-hidden="true"></i>
+            <button id="btnMenuMobile" class="btn-menu-mobile" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer;">
+                <i class="fa-solid fa-bars"></i>
             </button>
             <h2>Movimentação de Estoque</h2>
         </div>
-        <div class="usuario">
+        <div class="usuario" style="display: flex; gap: 20px; align-items: center;">
             <div class="perfil">
-                <i class="fa-regular fa-circle-user" aria-hidden="true"></i>
+                <i class="fa-regular fa-circle-user"></i>
                 <span>Leandro</span>
             </div>
-            <a href="login.html" id="btnLogout" aria-label="Sair do sistema">
-                Deslogar
-                <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
-            </a>    
+            <a href="login.html" id="btnLogout">
+                Deslogar <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
         </div>
     </header>
 
-    <div class="container">
+    <div style="display: flex; height: calc(100vh - 65px); width: 100vw; overflow: hidden;">
         
-        <aside id="menuLateral">
-            <div class="logoLateral">
-                <h1>OneMonth</h1>
-                <p>Sistema de gestão do ciclo de vida de produtos</p>
-            </div>
-            <nav aria-label="Navegação Principal">
-                <ul>
-                    <li tabindex="0"><i class="fa-solid fa-house" aria-hidden="true"></i>Início</li>
-                    <li tabindex="0"><i class="fa-solid fa-box" aria-hidden="true"></i>Produtos</li>
-                    <li tabindex="0" class="itemAtivo"><i class="fa-solid fa-cubes-stacked" aria-hidden="true"></i>Estoque</li>
-                    <li tabindex="0"></li>
-                    <li tabindex="0"></li>
-                    <li tabindex="0"></li>
-                    <li tabindex="0"></li>
-                </ul>
-            </nav>
-        </aside>
+        <aside id="menuLateral" style="width: 250px; background-color: #331E11; padding-top: 20px; color: #fff;"></aside>
 
-        <main role="main">
-            <div class="acoes-produtos">
-                <div class="busca-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="buscaEstoque" placeholder="Filtrar por produto ou lote...">
+        <main>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h2 style="color: #331E11; font-size: 1.8rem; margin-bottom: 5px;">Controle de Lotes em Estoque</h2>
+                    <p style="color: #444; font-size: 0.95rem; font-weight: 500;">Gerencie a entrada, validade e níveis críticos dos lotes produzidos.</p>
                 </div>
-                <button id="btnMovimentar" class="btn-principal" style="background-color: #28a745;">
-                    <i class="fa-solid fa-boxes-stacked"></i> Entrada de Lote</button>
+                
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div style="position: relative;">
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666;"></i>
+                        <input type="text" id="buscaEstoque" placeholder="Buscar lote ou produto..." style="padding: 10px 10px 10px 38px; border: 1px solid #ccc; border-radius: 8px; outline: none; width: 260px; font-size: 0.9rem; color: #331E11; background-color: #fff;">
+                    </div>
+
+                    <button id="btnNovoMovimento" style="background-color: #DE9E52; color: #331E11; border: none; padding: 10px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; gap: 8px; align-items: center; box-shadow: 0 4px 10px rgba(222, 158, 82, 0.3);">
+                        <i class="fa-solid fa-plus"></i>
+                        Novo Lote
+                    </button>
+                </div>
             </div>
 
-            <section class="atividades">
-                <h3>Resumo de Saldo por Produto</h3>
-            <div id ="cardsConsolidados" style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 25px;"></div>
-                
-            <h3>Ciclo de Vida do Inventário</h3>
+            <section class="tabela-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>ID Estoque</th>
+                            <th>Código Lote</th>
                             <th>Produto</th>
-                            <th>Qtd Mínima Alvo</th>
-                            <th>Saldo Atual</th>
-                            <th>Data de Fabricação</th> <th>Validade</th>
-                            <th>Status (Ciclo de Vida)</th>
-                            <th>Ações</th>
+                            <th>Qtd Mínima</th>
+                            <th>Qtd Atual</th>
+                            <th>Fabricação</th>
+                            <th>Validade</th>
+                            <th>Status</th>
+                            <th style="text-align: center;">Ações</th>
                         </tr>
                     </thead>
                     <tbody id="tabelaEstoqueBody">
@@ -145,19 +160,26 @@
         </main>
     </div>
 
-    <div id="modalMovimentacao" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div id="modalMovimentacao" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalMovTitulo">Atualizar Dados de Estoque</h2>
-                <button type="button" id="btnFecharMov" class="btn-fechar">&times;</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">
+                <h2 id="modalTitulo" style="font-size: 1.2rem; color: #331E11; margin: 0;">Adicionar Novo Lote</h2>
+                <button type="button" id="btnFecharModal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #331E11;">&times;</button>
             </div>
             
             <form id="formMovimentacao">
                 <input type="hidden" id="editIndex" value="">
+                
+                <div class="form-group">
+                    <label for="movProduto">Produto</label>
+                    <select id="movProduto" required>
+                        <option value="" disabled selected>Selecione o produto...</option>
+                    </select>
+                </div>
 
                 <div class="form-group">
-                    <label for="movProduto">Selecionar Produto Base</label>
-                    <select id="movProduto" required></select>
+                    <label for="movLote">Identificador do Lote</label>
+                    <input type="text" id="movLote" required placeholder="Ex: LOT-2026-05A">
                 </div>
 
                 <div class="form-row">
@@ -174,19 +196,22 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="movFab">Data Fabricação</label>
-                        <input type="date" id="movFab" max="9999-12-31" required>
+                        <input type="date" id="movFab" required>
                     </div>
                     <div class="form-group">
                         <label for="movVal">Data Validade</label>
-                        <input type="date" id="movVal" max="9999-12-31" required>
+                        <input type="date" id="movVal" required>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-salvar" style="width: 100%; margin-top: 10px; background-color: #DE9E52;">Salvar no Estoque</button>
+                <button type="submit" style="width: 100%; margin-top: 10px; padding: 14px; background-color: #DE9E52; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; color: #331E11; cursor: pointer;">
+                    Salvar no Estoque
+                </button>
             </form>
         </div>
     </div>
 
     <script src="../js/estoque.js"></script>
+    <script src="../js/navegacaoLateral.js"></script>
 </body>
 </html>

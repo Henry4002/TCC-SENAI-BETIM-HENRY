@@ -1,80 +1,50 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const nomePerfil = document.querySelector(".perfil span");
-    if (nomePerfil) {
-        nomePerfil.textContent = "Leandro";
-    }
+// ==========================================================================
+// CONTROLADOR DA TELA INICIAL (DASHBOARD)
+// ==========================================================================
 
-    // Inicializa o motor de cálculo dinâmico da Home
+document.addEventListener("DOMContentLoaded", () => {
     carregarMetricasDinamicas();
-    configurarNavegacaoLateral();
 });
 
 function carregarMetricasDinamicas() {
-    let produtos = JSON.parse(localStorage.getItem("produtos")) || [];
-    
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0);
+    // 1. Puxar as bases de dados locais atualizadas
+    const produtos = JSON.parse(localStorage.getItem('produtos_db')) || [];
+    const receitas = JSON.parse(localStorage.getItem('receitas')) || [];
+    const versoes = JSON.parse(localStorage.getItem('versoes_receita')) || [];
+    const estoque = JSON.parse(localStorage.getItem('estoque_db')) || [];
 
-    let totalProdutos = produtos.length;
-    let totalEstoqueBaixo = 0;
-
-    // Mapa para somar o saldo acumulado total de cada produto para verificar estoque mínimo geral
-    let agrupadoPorNome = {};
-    let minimosPorNome = {};
-
-    produtos.forEach(prod => {
-        const nome = prod.nome;
-        const atual = parseInt(prod.atual || 0);
-        const minimo = parseInt(prod.minimo || 0);
-
-        agrupadoPorNome[nome] = (agrupadoPorNome[nome] || 0) + atual;
-        minimosPorNome[nome] = minimo; // mantém a referência do mínimo configurado
-    });
-
-    // Calcula quantos produtos no total consolidado estão abaixo do mínimo
-    for (let nome in agrupadoPorNome) {
-        if (agrupadoPorNome[nome] < minimosPorNome[nome]) {
-            totalEstoqueBaixo++;
-        }
-    }
-
-    // Alimenta os seletores das suas divs mantendo os IDs definidos
+    // 2. Conectar com os elementos HTML do Dashboard
     const txtProdutos = document.getElementById("numProdutos");
     const txtVersoes = document.getElementById("numVersoes");
     const txtReceitas = document.getElementById("numReceitas");
     const txtEstoqueBaixo = document.getElementById("numEstoqueBaixo");
 
-    if (txtProdutos) txtProdutos.textContent = totalProdutos;
-    
-    // Contagem de lotes criados (Versões Cadastradas)
-    if (txtVersoes) txtVersoes.textContent = totalProdutos; 
-    
-    // Simulação estável baseada nas categorias ou número de receitas bases distintas
-    if (txtReceitas) txtReceitas.textContent = Object.keys(agrupadoPorNome).length; 
-    
+    // 3. Aplicar as contagens reais
+    if (txtProdutos) txtProdutos.textContent = produtos.length;
+    if (txtReceitas) txtReceitas.textContent = receitas.length;
+    if (txtVersoes) txtVersoes.textContent = versoes.length;
+
+    // 4. Lógica Inteligente para Estoque Baixo
+    let totalEstoqueBaixo = 0;
+    estoque.forEach(lote => {
+        // Se a quantidade atual do lote for menor que a meta mínima, dispara o alerta
+        if (lote.qtdAtual < lote.qtdMinima) {
+            totalEstoqueBaixo++;
+        }
+    });
+
     if (txtEstoqueBaixo) {
         txtEstoqueBaixo.textContent = totalEstoqueBaixo;
-
-        // Regra de borda dinâmica direta via JS para o card de estoque baixo
+        
+        // Efeito visual automático: Se houver produtos em falta, o card fica com um aviso vermelho
         const cardEstoque = txtEstoqueBaixo.closest('.cardEstatistica');
-        if (cardEstoque) {
-            if (totalEstoqueBaixo > 0) {
-                cardEstoque.style.borderLeft = "5px solid #cc0000"; // Vermelho Crítico se houver problemas
-            } else {
-                cardEstoque.style.borderLeft = "5px solid #ffcc00"; // Amarelo Padrão de Atenção
-            }
+        if (cardEstoque && totalEstoqueBaixo > 0) {
+            cardEstoque.style.borderLeft = "5px solid #dc3545"; // Vermelho
+            txtEstoqueBaixo.style.color = "#dc3545";
+            txtEstoqueBaixo.style.fontWeight = "bold";
+        } else if (cardEstoque) {
+            cardEstoque.style.borderLeft = "5px solid #198754"; // Verde (Tudo OK)
+            txtEstoqueBaixo.style.color = "#198754";
         }
     }
-}
-
-function configurarNavegacaoLateral() {
-    const itensMenu = document.querySelectorAll("aside ul li");
-    itensMenu.forEach(item => {
-        item.addEventListener("click", () => {
-            const modulo = item.textContent.trim().toLowerCase();
-            if (modulo.includes("produtos")) window.location.href = "produtos.html";
-            else if (modulo.includes("início") || modulo.includes("inicio")) window.location.href = "telaInicial.html";
-            else if (modulo.includes("estoque")) window.location.href = "estoque.html";
-        });
-    });
 }

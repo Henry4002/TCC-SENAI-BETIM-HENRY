@@ -1,194 +1,168 @@
 // Seleção dos elementos
-
 const formLogin = document.getElementById("formLogin");
 
-const usuario = document.getElementById("usuario");
+const gmail = document.getElementById("gmail"); 
 const senha = document.getElementById("senha");
 
-const erroUsuario = document.getElementById("erroUsuario");
+const erroGmail = document.getElementById("erroGmail"); 
 const erroSenha = document.getElementById("erroSenha");
 
 const toggleSenha = document.getElementById("toggleSenha");
 const botao = document.querySelector("button");
+const esqueciSenha = document.querySelector(".esqueciSenha"); // ADICIONADO: Seleção do link esqueci senha
 
 
 // Funções auxiliares
-
 function limparErros() {
-
-    erroUsuario.style.display = "none";
+    erroGmail.style.display = "none"; 
     erroSenha.style.display = "none";
 
-    usuario.parentElement.classList.remove("erroCampo", "sucesso");
+    gmail.parentElement.classList.remove("erroCampo", "sucesso"); 
     senha.parentElement.classList.remove("erroCampo", "sucesso");
-
 }
 
 function mostrarErro(elementoMensagem, input, texto) {
-
     elementoMensagem.style.display = "block";
     elementoMensagem.textContent = texto;
 
     input.parentElement.classList.remove("sucesso");
     input.parentElement.classList.add("erroCampo");
-
 }
 
 function mostrarSucesso(input) {
-
     input.parentElement.classList.remove("erroCampo");
     input.parentElement.classList.add("sucesso");
-
 }
 
 
-
-
 // Mostrar/Ocultar senha
-
 toggleSenha.addEventListener("click", () => {
-
     if (senha.type === "password") {
-
         senha.type = "text";
-
         toggleSenha.classList.remove("fa-eye");
         toggleSenha.classList.add("fa-eye-slash");
-
     } else {
-
         senha.type = "password";
-
         toggleSenha.classList.remove("fa-eye-slash");
         toggleSenha.classList.add("fa-eye");
-
     }
-
 });
 
 
-// Validação do usuário
+// Função para validar formato de e-mail/gmail
+function validarFormatoGmail(valor) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(valor);
+}
 
-usuario.addEventListener("input", () => {
-
-    const valor = usuario.value.trim();
+// Validação em tempo real do Gmail
+gmail.addEventListener("input", () => {
+    const valor = gmail.value.trim();
 
     if (valor.length === 0) {
-
-        erroUsuario.style.display = "none";
-        usuario.parentElement.classList.remove("erroCampo", "sucesso");
-
-    } else if (valor.length < 3) {
-
+        erroGmail.style.display = "none";
+        gmail.parentElement.classList.remove("erroCampo", "sucesso");
+    } else if (!validarFormatoGmail(valor)) {
         mostrarErro(
-            erroUsuario,
-            usuario,
-            "O usuário deve possuir pelo menos 3 caracteres."
+            erroGmail,
+            gmail,
+            "Por favor, insira um Gmail válido."
         );
-
     } else {
-
-        erroUsuario.style.display = "none";
-        mostrarSucesso(usuario);
-
+        erroGmail.style.display = "none";
+        mostrarSucesso(gmail);
     }
-
 });
 
 // Validação da senha
-
 senha.addEventListener("input", () => {
-
     const valor = senha.value.trim();
 
     if (valor.length === 0) {
-
         erroSenha.style.display = "none";
         senha.parentElement.classList.remove("erroCampo", "sucesso");
-
     } else if (valor.length < 6 || valor.length > 12) {
-
         mostrarErro(
             erroSenha,
             senha,
             "A senha deve possuir entre 6 e 12 caracteres."
         );
-
     } else {
-
         erroSenha.style.display = "none";
         mostrarSucesso(senha);
+    }
+});
 
+
+// ==========================================================================
+// LÓGICA DA RECUPERAÇÃO DE SENHA (NOVA FUNCIONALIDADE)
+// ==========================================================================
+esqueciSenha.addEventListener("click", (event) => {
+    event.preventDefault(); // Impede a página de recarregar ou subir pro topo
+    limparErros();
+
+    const valorGmail = gmail.value.trim();
+
+    // Se o campo estiver vazio ou o formato for inválido, exige o preenchimento
+    if (valorGmail.length === 0 || !validarFormatoGmail(valorGmail)) {
+        mostrarErro(
+            erroGmail,
+            gmail,
+            "Digite seu Gmail acima para receber as instruções de recuperação."
+        );
+        gmail.focus(); // Coloca o cursor do teclado direto no campo
+        return;
     }
 
+    // Se o e-mail for válido, simula o envio com sucesso
+    mostrarSucesso(gmail);
+    alert(`Sucesso! Um link de redefinição de senha foi enviado para o endereço: ${valorGmail}`);
 });
 
 
 // Envio do formulário
-
 formLogin.addEventListener("submit", function (event) {
-
     event.preventDefault();
-
     limparErros();
 
     let formularioValido = true;
 
-
-    // Usuário
-
-    if (usuario.value.trim().length < 3) {
-
+    // Validação do Gmail no Submit
+    if (!validarFormatoGmail(gmail.value.trim())) {
         mostrarErro(
-            erroUsuario,
-            usuario,
-            "O usuário deve possuir pelo menos 3 caracteres."
+            erroGmail,
+            gmail,
+            "Por favor, insira um Gmail válido."
         );
-
         formularioValido = false;
-
     }
 
-
     // Senha
-
     if (
         senha.value.trim().length < 6 ||
         senha.value.trim().length > 12
     ) {
-
         mostrarErro(
             erroSenha,
             senha,
             "A senha deve possuir entre 6 e 12 caracteres."
         );
-
         formularioValido = false;
-
     }
-
 
     // Se houver erro, não continua
-
     if (!formularioValido) {
-
         return;
-
     }
 
-
     // Simulação de login
-
     botao.disabled = true;
     botao.textContent = "Entrando...";
 
     setTimeout(() => {
-
-        localStorage.setItem("usuarioLogado", usuario.value);
+        localStorage.setItem("usuarioLogado", gmail.value);
         localStorage.setItem("logado", "true");
 
         window.location.href = "telaInicial.html";
-
     }, 1500);
-
 });

@@ -1,0 +1,26 @@
+/* ==========================================================================
+   MELHORIA VISUAL DA TABELA DE ESTOQUE
+   ========================================================================== */
+
+/* Garante o alinhamento perfeito no centro de cada linha */
+.atividades table tbody tr td {
+    vertical-align: middle; /* Alinha o conteúdo verticalmente no centro */
+    padding: 16px 12px;     /* Dá um respiro excelente acima e abaixo do texto */
+    font-size: 0.95rem;     /* Tamanho ideal para leitura corporativa */
+    color: #331E11;         /* Mantém o padrão marrom escuro do site */
+}
+
+/* Deixa os títulos das colunas perfeitamente alinhados com os dados */
+.atividades table thead tr th {
+    padding: 14px 12px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* Pequeno ajuste na Tag de Lote para não quebrar linha internamente */
+.atividades table tbody tr td span {
+    display: inline-block;
+    white-space: nowrap; /* Impede que o código do lote se quebre em duas linhas */
+}

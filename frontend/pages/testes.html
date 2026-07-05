@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneMonth - Testes de Produção</title>
+    <link rel="stylesheet" href="../css/telaInicial.css">
+    <link rel="stylesheet" href="../css/produtos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body {
+            /* O segredo para a leitura: Um gradiente escuro por cima da imagem de fundo */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/bakery.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Ajuste do Cabeçalho para não ficar transparente sobre a imagem */
+        header {
+            background-color: #331E11;
+            color: #ffffff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        header h2 {
+            margin: 0;
+            color: #DE9E52;
+        }
+
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        /* Fundo principal com efeito "Glass" mais opaco para leitura perfeita */
+        main {
+            background-color: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top-left-radius: 20px;
+        }
+
+        /* Estilização Profissional da Tabela */
+        .tabela-container {
+            background: #ffffff; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.08);
+            margin-top: 20px;
+        }
+
+        .tabela-container table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabela-container table th {
+            background-color: #331E11; 
+            color: #ffffff;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 18px 16px;
+            text-align: left;
+        }
+
+        .tabela-container table td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+            color: #444; /* Cor escura para leitura limpa */
+        }
+
+        .tabela-container table tr:hover td {
+            background-color: #faf8f5;
+        }
+
+        /* Badges para as Versões */
+        .badge-versao {
+            background-color: #f4ece4;
+            color: #331E11;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #e8d5c4;
+        }
+
+        /* Modal Refinado */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid #eee;
+        }
+        
+        .form-group {
+            display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #331E11;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px; 
+            border-radius: 8px; 
+            border: 1px solid #ddd; 
+            outline: none;
+            transition: border-color 0.3s;
+            font-family: inherit;
+            background-color: #fff;
+            color: #331E11;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #DE9E52;
+            box-shadow: 0 0 0 3px rgba(222, 158, 82, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header role="banner">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button id="btnMenuMobile" class="btn-menu-mobile" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer;">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <h2>Testes de Produção</h2>
+        </div>
+        <div class="usuario" style="display: flex; gap: 20px; align-items: center;">
+            <div class="perfil">
+                <i class="fa-regular fa-circle-user"></i>
+                <span>Leandro</span>
+            </div>
+            <a href="login.html" id="btnLogout">
+                Deslogar <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+        </div>
+    </header>
+
+    <div style="display: flex; height: calc(100vh - 65px); width: 100vw; overflow: hidden;">
+        
+        <aside id="menuLateral" style="width: 250px; background-color: #331E11; padding-top: 20px; color: #fff;">
+            
+        </aside>
+
+        <main style="flex: 1; padding: 40px; overflow-y: auto;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h2 style="color: #331E11; font-size: 1.8rem; margin-bottom: 5px;">Registro de Testes</h2>
+                    <p style="color: #444; font-size: 0.95rem; font-weight: 500;">Acompanhe o histórico de qualidade e observações das receitas testadas.</p>
+                </div>
+                
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <div style="position: relative;">
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666;"></i>
+                        <input type="text" id="buscaTeste" placeholder="Buscar por receita..." style="padding: 10px 10px 10px 38px; border: 1px solid #ccc; border-radius: 8px; outline: none; width: 260px; font-size: 0.9rem; color: #331E11; background-color: #fff;">
+                    </div>
+
+                    <button id="btnNovoTeste" style="background-color: #DE9E52; color: #331E11; border: none; padding: 10px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; gap: 8px; align-items: center; box-shadow: 0 4px 10px rgba(222, 158, 82, 0.3);">
+                        <i class="fa-solid fa-plus"></i>
+                        Registrar Teste
+                    </button>
+                </div>
+            </div>
+
+            <section class="tabela-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 12%;">Data</th>
+                            <th style="width: 25%;">Receita</th>
+                            <th style="width: 10%;">Versão</th>
+                            <th style="width: 13%;">Avaliador</th>
+                            <th style="width: 30%;">Observações do Teste</th>
+                            <th style="width: 10%; text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaTestesBody">
+                        </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <div id="modalTeste" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">
+                <h2 id="modalTesteTitulo" style="font-size: 1.2rem; color: #331E11; margin: 0;">Registrar Resultado</h2>
+                <button type="button" id="btnFecharModalTeste" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #331E11;">&times;</button>
+            </div>
+            
+            <form id="formTeste">
+                <input type="hidden" id="editIndexTeste" value="">
+
+                <div class="form-group">
+                    <label for="testeReceita">Receita Avaliada</label>
+                    <select id="testeReceita" required>
+                        <option value="" disabled selected>Selecione a receita...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="testeVersao">Versão da Receita</label>
+                    <select id="testeVersao" required disabled style="background-color: #eee;">
+                        <option value="" disabled selected>Selecione primeiro a receita</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="testeData">Data do Teste</label>
+                    <input type="date" id="testeData" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="testeResultado">Resultado / Avaliação</label>
+                    <textarea id="testeResultado" rows="3" required placeholder="Descreva os resultados obtidos..." style="resize: none;"></textarea>
+                </div>
+
+                <button type="submit" style="width: 100%; margin-top: 10px; padding: 14px; background-color: #DE9E52; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; color: #331E11; cursor: pointer;">
+                    Salvar Teste
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/navegacaoLateral.js"></script>
+    <script src="../js/receitaService.js"></script> 
+    <script src="../js/testes.js"></script>
+</body>
+</html>

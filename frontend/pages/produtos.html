@@ -3,72 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OneMonth - Produtos</title>
-    <link rel="stylesheet" href="../css/telaInicial.css"> 
+    <title>OneMonth - Gestão de Produtos</title>
+    <link rel="stylesheet" href="../css/telaInicial.css">
     <link rel="stylesheet" href="../css/produtos.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        body {
+            /* Fundo harmónico e escuro por trás do painel translúcido */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/bakery.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Cabeçalho Profissional */
+        header {
+            background-color: #331E11;
+            color: #ffffff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+        }
+
+        header h2 { margin: 0; color: #DE9E52; }
+        header a { color: #ffffff; text-decoration: none; }
+
+        /* Área Principal com Efeito Vidro (Glassmorphism) */
+        main {
+            background-color: rgba(255, 255, 255, 0.92) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top-left-radius: 20px;
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        /* Tabela Organizada */
+        .tabela-container {
+            background: #ffffff; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1); 
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.08);
+            margin-top: 20px;
+        }
+
+        .tabela-container table { width: 100%; border-collapse: collapse; }
+        .tabela-container table th {
+            background-color: #331E11; 
+            color: #ffffff;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 18px 16px;
+            text-align: left;
+        }
+        .tabela-container table td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+            color: #444;
+        }
+        .tabela-container table tr:hover td { background-color: #faf8f5; }
+
+        /* Modal Refinado */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-overlay.ativo { display: flex; }
+        .modal-content {
+            background-color: #ffffff; width: 100%; max-width: 500px; padding: 35px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid #eee;
+        }
+        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .form-group label { font-weight: 600; color: #331E11; font-size: 0.9rem; }
+        .form-group input, .form-group textarea {
+            padding: 12px; border-radius: 8px; border: 1px solid #ddd; outline: none; transition: 0.3s; font-family: inherit; background-color: #fff; color: #331E11;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #DE9E52; box-shadow: 0 0 0 3px rgba(222, 158, 82, 0.1);
+        }
+    </style>
 </head>
 <body>
 
     <header role="banner">
         <div style="display: flex; align-items: center; gap: 15px;">
-            <button id="btnMenuMobile" aria-expanded="false" aria-controls="menuLateral" aria-label="Abrir menu de navegação" class="btn-menu-mobile">
-                <i class="fa-solid fa-bars" aria-hidden="true"></i>
+            <button id="btnMenuMobile" class="btn-menu-mobile" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer;">
+                <i class="fa-solid fa-bars"></i>
             </button>
             <h2>Gestão de Produtos</h2>
         </div>
-        <div class="usuario">
+        <div class="usuario" style="display: flex; gap: 20px; align-items: center;">
             <div class="perfil">
-                <i class="fa-regular fa-circle-user" aria-hidden="true"></i>
+                <i class="fa-regular fa-circle-user"></i>
                 <span>Leandro</span>
             </div>
-            <a href="login.html" id="btnLogout" aria-label="Sair do sistema">
-                Deslogar
-                <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
-            </a>    
+            <a href="login.html" id="btnLogout">
+                Deslogar <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
         </div>
     </header>
 
-    <div class="container">
+    <div style="display: flex; height: calc(100vh - 65px); width: 100vw; overflow: hidden;">
         
-        <aside id="menuLateral">
-            <div class="logoLateral">
-                <h1>OneMonth</h1>
-                <p>Sistema de gestão do ciclo de vida de produtos</p>
-            </div>
-            <nav aria-label="Navegação Principal">
-                <ul>
-                    <li tabindex="0"><i class="fa-solid fa-house" aria-hidden="true"></i>Início</li>
-                    <li tabindex="0" class="itemAtivo"><i class="fa-solid fa-box" aria-hidden="true"></i>Produtos</li>
-                    <li tabindex="0"><i class="fa-solid fa-cubes-stacked" aria-hidden="true"></i>Estoque</li>
-                    <li tabindex="0"></li>
-                    <li tabindex="0"></li>
-                    <li tabindex="0"></li>
-                    <li tabindex="0"></li>
-                </ul>
-            </nav>
-        </aside>
+        <aside id="menuLateral" style="width: 250px; background-color: #331E11; padding-top: 20px; color: #fff;"></aside>
 
-        <main role="main">
-            <div class="acoes-produtos">
-                <div class="busca-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="buscaProduto" placeholder="Buscar produto por nome...">
+        <main>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <div>
+                    <h2 style="color: #331E11; font-size: 1.8rem; margin-bottom: 5px;">Lista de Produtos</h2>
+                    <p style="color: #444; font-size: 0.95rem; font-weight: 500;">Faça a gestão do catálogo de produtos disponíveis.</p>
                 </div>
-                <button id="btnNovoProduto" class="btn-principal">
-                    <i class="fa-solid fa-plus"></i> Novo Produto
-                </button>
+                
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <button id="btnNovoProduto" style="background-color: #DE9E52; color: #331E11; border: none; padding: 10px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; gap: 8px; align-items: center; box-shadow: 0 4px 10px rgba(222, 158, 82, 0.3);">
+                        <i class="fa-solid fa-plus"></i>
+                        Novo Produto
+                    </button>
+                </div>
             </div>
 
-            <section class="atividades">
-                <h3>Produtos Cadastrados</h3>
+            <section class="tabela-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Nome do Produto</th>
-                            <th>Descrição</th>
-                            <th>Ações</th>
+                            <th style="width: 40%;">Nome do Produto</th>
+                            <th style="width: 60%;">Descrição</th>
                         </tr>
                     </thead>
                     <tbody id="tabelaProdutosBody">
@@ -78,12 +146,13 @@
         </main>
     </div>
 
-    <div id="modalCadastro" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div id="modalCadastro" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2>Cadastrar Novo Produto</h2>
-                <button type="button" id="btnFecharModal" class="btn-fechar">&times;</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 20px;">
+                <h2 style="font-size: 1.2rem; color: #331E11; margin: 0;">Cadastrar Novo Produto</h2>
+                <button type="button" id="btnFecharModal" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #331E11;">&times;</button>
             </div>
+            
             <form id="formCadastroProduto">
                 <div class="form-group">
                     <label for="prodNome">Nome do Produto</label>
@@ -92,14 +161,17 @@
                 
                 <div class="form-group">
                     <label for="prodDescricao">Descrição do Produto</label>
-                    <textarea id="prodDescricao" required placeholder="Ex: Produzido com farinha 100% integral, macio e sem conservantes." rows="4" style="width: 100%; padding: 10px; border: 1px solid rgba(51,30,17,0.15); border-radius: 6px; font-family: inherit; resize: vertical;"></textarea>
+                    <textarea id="prodDescricao" required placeholder="Ex: Produzido com farinha 100% integral, macio e sem conservantes." rows="4" style="resize: vertical;"></textarea>
                 </div>
 
-                <button type="submit" class="btn-salvar" style="background-color: #DE9E52; margin-top: 10px;">Salvar Produto</button>
+                <button type="submit" style="width: 100%; margin-top: 10px; padding: 14px; background-color: #DE9E52; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; color: #331E11; cursor: pointer;">
+                    Salvar Produto
+                </button>
             </form>
         </div>
     </div>
 
     <script src="../js/produtos.js"></script>
+    <script src="../js/navegacaoLateral.js"></script>
 </body>
 </html>

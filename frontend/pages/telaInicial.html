@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OneMonth - Tela Inicial</title>
-
     <link rel="stylesheet" href="../css/telaInicial.css">
-
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-
 <body>
 
     <header role="banner">
         <div style="display: flex; align-items: center; gap: 15px;">
-            <button id="btnMenuMobile" aria-expanded="false" aria-controls="menuLateral" aria-label="Abrir menu de navegação" class="btn-menu-mobile">
+            <button id="btnMenuMobile" aria-expanded="false" aria-controls="menuLateral" class="btn-menu-mobile">
                 <i class="fa-solid fa-bars" aria-hidden="true"></i>
             </button>
             <h2>Página Inicial</h2>
@@ -28,51 +23,19 @@
                 <span>Leandro</span>
             </div>
             <a href="login.html" id="btnLogout" aria-label="Sair do sistema">
-                Deslogar
-                <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+                Deslogar <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
             </a>
         </div>
     </header>
 
     <div class="container">
-        <aside id="menuLateral" role="complementary">
-            <div class="logoLateral">
-                <h1>OneMonth</h1>
-                <p>Sistema de gestão do ciclo de vida de produtos</p>
-            </div>
-
-            <nav aria-label="Navegação Principal">
-                <style>
-                    /* Garante que o link ocupa o botão inteiro e mantém o teu layout */
-                    aside ul li a {
-                        text-decoration: none;
-                        color: inherit;
-                        display: flex;
-                        align-items: center;
-                        gap: 10px;
-                        width: 100%;
-                        height: 100%;
-                        outline: none;
-                    }
-                </style>
-                <ul>
-                    <li class="ativo"><a href="telaInicial.html"><i class="fa-solid fa-house"></i> Início</a></li>
-                    <li><a href="produtos.html"><i class="fa-solid fa-boxes-stacked"></i> Produtos</a></li>
-                    <li><a href="#"><i class="fa-solid fa-kitchen-set"></i> Receitas</a></li>
-                    <li><a href="#"><i class="fa-solid fa-code-branch"></i> Versões</a></li>
-                    <li><a href="#"><i class="fa-solid fa-gears"></i> Produção</a></li>
-                    <li><a href="#"><i class="fa-solid fa-cubes"></i> Estoque</a></li>
-                    <li><a href="#"><i class="fa-solid fa-users"></i> Usuários</a></li>
-                    <li><a href="#"><i class="fa-solid fa-sliders"></i> Configuração</a></li>
-                </ul>
-            </nav>
-        </aside>
+        
+        <aside id="menuLateral" role="complementary" style="width: 250px; background-color: #331E11; padding-top: 20px; color: #fff;"></aside>
 
         <main id="conteudo-principal" role="main">
 
             <div>
-
-                <div class="novoProduto" role="button" tabindex="0" aria-label="Cadastrar Novo Produto">
+                <div class="novoProduto" role="button" tabindex="0" onclick="window.location.href='produtos.html'" style="cursor: pointer;"> 
                     <div class="overlay">
                         <i class="fa-solid fa-circle-plus" aria-hidden="true"></i>
                         <h2>Novo Produto</h2>
@@ -80,41 +43,32 @@
                 </div>
 
                 <div class="estatisticas">
-
                     <div class="cardEstatistica" aria-live="polite">
                         <i class="fa-solid fa-box" aria-hidden="true"></i>
                         <h3>Produtos Cadastrados</h3>
                         <p id="numProdutos">0</p>
                     </div>
-
                     <div class="cardEstatistica" aria-live="polite">
                         <i class="fa-solid fa-code-branch" aria-hidden="true"></i>
                         <h3>Versões Cadastradas</h3>
                         <p id="numVersoes">0</p>
                     </div>
-
                     <div class="cardEstatistica" aria-live="polite">
                         <i class="fa-solid fa-kitchen-set" aria-hidden="true"></i>
                         <h3>Receitas em Produção</h3>
                         <p id="numReceitas">0</p>
                     </div>
-
                     <div class="cardEstatistica" aria-live="polite">
                         <i class="fa-solid fa-cubes-stacked" aria-hidden="true"></i>
                         <h3>Estoque Baixo</h3>
                         <p id="numEstoqueBaixo">0</p>
                     </div>
-
                 </div>
-
             </div>
 
             <section aria-labelledby="titulo-tabela">
-
                 <h2 id="titulo-tabela">Últimos Lotes Cadastrados</h2>
-
                 <table>
-
                     <thead>
                         <tr>
                             <th scope="col">Código</th>
@@ -124,55 +78,16 @@
                             <th scope="col">Vencimento</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        <tr>
-                            <td>124142</td>
-                            <td>Leandro</td>
-                            <td>Pão</td>
-                            <td>12</td>
-                            <td>12/06/2026</td>
-                        </tr>
-                        <tr>
-                            <td>124141</td>
-                            <td>Leandro</td>
-                            <td>Rosca</td>
-                            <td>4</td>
-                            <td>04/07/2026</td>
-                        </tr>
-                        <tr>
-                            <td>52523</td>
-                            <td>Samuel</td>
-                            <td>Biscoitão</td>
-                            <td>22</td>
-                            <td>22/05/2026</td>
-                        </tr>
-                        <tr>
-                            <td>22222</td>
-                            <td>Henrique</td>
-                            <td>Pamonha</td>
-                            <td>200</td>
-                            <td>12/05/2026</td>
-                        </tr>
-                        <tr>
-                            <td>124312</td>
-                            <td>Priscila</td>
-                            <td>Pastel</td>
-                            <td>2000</td>
-                            <td>20/08/2026</td>
-                        </tr>
+                        <tr><td>124142</td><td>Leandro</td><td>Pão</td><td>12</td><td>12/06/2026</td></tr>
+                        <tr><td>124141</td><td>Leandro</td><td>Rosca</td><td>4</td><td>04/07/2026</td></tr>
                     </tbody>
-
                 </table>
-
             </section>
-
         </main>
-
     </div>
     
     <script src="../js/telaInicial.js"></script>
-
+    <script src="../js/navegacaoLateral.js"></script>
 </body>
-
 </html>
