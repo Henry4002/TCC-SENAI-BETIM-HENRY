@@ -232,10 +232,22 @@ function validarSenha(){
 
     if(valor==""){
 
-        limparCampo(senha);
-
         barraForca.style.width="0%";
         textoForca.textContent="";
+
+        if(usuarioEmEdicao !== null){
+
+            mostrarErro(
+                erroSenha,
+                senha,
+                "Por segurança, defina uma nova senha para salvar as alterações."
+            );
+
+        } else {
+
+            limparCampo(senha);
+
+        }
 
         return false;
 
@@ -455,6 +467,12 @@ formCadastro.addEventListener("submit", async (event) => {
             alert("Colaborador atualizado com sucesso!");
             usuarioEmEdicao = null; // Limpa o estado de edição
             btnCadastrar.textContent = "Cadastrar Colaborador";
+
+            // Volta os campos de senha ao estado normal (modo cadastro)
+            senha.placeholder = "Crie uma senha forte";
+            confirmarSenha.placeholder = "Repita a senha";
+            limparCampo(senha);
+            limparErro(erroSenha);
             
         } else {
             // MODO CRIAÇÃO: Envia um POST para a API salvar o novo usuário
@@ -655,8 +673,22 @@ window.prepararEdicao = async function(id) {
         if (radio) radio.checked = true;
 
         // Avisa visualmente o botão que o modo atual mudou para edição
+        // Avisa visualmente o botão que o modo atual mudou para edição
         if (typeof btnCadastrar !== 'undefined') {
             btnCadastrar.textContent = "Salvar Alterações";
+        }
+
+        // Deixa óbvio pro admin: precisa digitar uma senha NOVA pra salvar
+        if (typeof senha !== 'undefined') {
+            senha.placeholder = "Digite a nova senha (obrigatório)";
+            senha.parentElement.classList.add("erroCampo");
+        }
+        if (typeof confirmarSenha !== 'undefined') {
+            confirmarSenha.placeholder = "Repita a nova senha";
+        }
+        if (typeof erroSenha !== 'undefined') {
+            erroSenha.textContent = "Por segurança, defina uma nova senha para salvar as alterações.";
+            erroSenha.style.display = "block";
         }
         
         // 🌟 PASSO CRUCIAL: Guarda o ID numérico do Java na nossa variável global de controle
