@@ -29,6 +29,7 @@ public class EstoqueService {
         private EstoqueDTO converterParaDTO(Estoque estoque){
             return new EstoqueDTO(
                     estoque.getId(),
+                    estoque.getProduto().getId(),
                     estoque.getDataAtualizacao(),
                     estoque.getQtdMinima(),
                     estoque.getQuantidade(),

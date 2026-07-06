@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public class EstoqueDTO {
     private Long id;
+    private Long idProduto;
     private LocalDateTime dataAtualizacao;
     private int qtdMinima;
     private int quantidade;
@@ -17,8 +18,9 @@ public class EstoqueDTO {
     public EstoqueDTO() {
     }
 
-    public EstoqueDTO(Long id, LocalDateTime dataAtualizacao, int qtdMinima, int quantidade, LocalDate dataFabricacao, LocalDate dataValidade, String lote, String statusValidade, String produto) {
+    public EstoqueDTO(Long id, Long idProduto, LocalDateTime dataAtualizacao, int qtdMinima, int quantidade, LocalDate dataFabricacao, LocalDate dataValidade, String lote, String statusValidade, String produto) {
         this.id = id;
+        this.idProduto = idProduto;
         this.dataAtualizacao = dataAtualizacao;
         this.qtdMinima = qtdMinima;
         this.quantidade = quantidade;
@@ -35,6 +37,14 @@ public class EstoqueDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getIdProduto() {
+        return idProduto;
+    }
+
+    public void setIdProduto(Long idProduto) {
+        this.idProduto = idProduto;
     }
 
     public LocalDateTime getDataAtualizacao() {
