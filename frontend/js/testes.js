@@ -3,6 +3,15 @@
 // ==========================================================================
 const API_URL = "https://projeto-tcc-senai-production.up.railway.app"; // Substitua pela sua URL real do Railway se necessário
 
+const usuarioLogado = JSON.parse(localStorage.getItem("usuario"));
+if (usuarioLogado && usuarioLogado.nome) {
+    // Altere o ID abaixo para o ID que o seu elemento HTML "Leandro" utiliza no header
+    const elementoNome = document.querySelector(".header .usuario-nome") || document.getElementById("nomeUsuario");
+    if (elementoNome) {
+        elementoNome.innerText = usuarioLogado.nome; // Vai mudar dinamicamente para "AdministradorInicial"!
+    }
+}
+
 const TesteService = {
     listarTestes: async () => {
         const response = await fetch(`${API_URL}/teste`);
@@ -245,12 +254,29 @@ function configurarFormularioTeste() {
             return;
         }
 
+        // Definimos o ID 8 como padrão inicial de segurança (caso o localStorage falhe)
+        let idUsuarioFinal = 8; 
+
         try {
-            // idUsuario mocando em 1 temporariamente até implementarem Login/Auth
+            // CORRIGIDO: Buscando a chave exata definida no seu login.js ("usuario")
+            const usuarioString = localStorage.getItem("usuario");
+            
+            if (usuarioString) {
+                const usuarioObjeto = JSON.parse(usuarioString);
+                if (usuarioObjeto && usuarioObjeto.id) {
+                    idUsuarioFinal = usuarioObjeto.id; // Pega o ID dinâmico do Administrador (8) ou de quem logar!
+                }
+            }
+        } catch (error) {
+            console.log("Erro ao ler o localStorage do usuário, usando ID padrão 8:", error);
+        }
+
+        try {
+            // Envia o ID dinâmico e correto para a API
             if (idEdit === "") {
-                await TesteService.criarTeste(dataTeste, resultado, 1, idVersao);
+                await TesteService.criarTeste(dataTeste, resultado, idUsuarioFinal, idVersao);
             } else {
-                await TesteService.editarTeste(idEdit, dataTeste, resultado, 1, idVersao);
+                await TesteService.editarTeste(idEdit, dataTeste, resultado, idUsuarioFinal, idVersao);
             }
             document.getElementById("modalTeste").style.display = "none";
             renderizarTabelaTestes();
