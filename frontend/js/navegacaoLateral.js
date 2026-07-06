@@ -16,6 +16,7 @@ function configurarMenuLateralDinamico() {
             <li data-url="receitas.html"><i class="fa-solid fa-receipt"></i> Receitas</li>
             <li data-url="estoque.html"><i class="fa-solid fa-cubes-stacked"></i> Estoque</li>
             <li data-url="testes.html"><i class="fa-solid fa-vial"></i> Testes</li>
+            <li data-url="ADMcadastro.html"><i class="fa-solid fa-user-plus"></i> Colaboradores</li>
         </ul>
     `;
 

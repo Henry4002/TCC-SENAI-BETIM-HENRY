@@ -1,310 +1,365 @@
-/* ==========================================================================
-   1. RESET E CONFIGURAÇÕES GERAIS
-   ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* ==========================================================
+   CADASTRO DE COLABORADORES
+   ========================================================== */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-
-html, body {
-    height: 100%;
-    width: 100%;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Mantém a tela principal fixa */
-}
-
-/* ==========================================================================
-   2. CABEÇALHO (HEADER) - IDÊNTICO AO LOGIN
-   ========================================================================== */
-header {
-    background-color: #331E11; /* Marrom escuro */
-    color: #ffffff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 40px;
-    height: 70px;
-    width: 100%;
-    z-index: 10;
-}
-
-header .logoTopo {
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-
-header nav a {
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: color 0.2s;
-}
-
-header nav a:hover {
-    color: #DE9E52;
-}
-
-/* ==========================================================================
-   3. CONTAINER PRINCIPAL (DIVISÃO DA TELA)
-   ========================================================================== */
-.container {
-    display: flex;
+.conteudo-principal {
     flex: 1;
-    height: calc(100vh - 70px);
-    width: 100%;
-}
-
-/* Painel Lateral da Imagem (Pão) */
-.imagem {
-    flex: 0 0 32%; /* 1/3 da tela horizontal */
-    background-color: #b3b3b3;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3)), 
-                      url('../img/bread2.jpg'); /* Caminho corrigido para sua pasta img */
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
+    background: #F8F5F1;
+    padding: 30px 20px; /* Reduzido de 35px */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 40px;
-}
-
-/* Estilização do H1 já existente no HTML do cadastro */
-.imagem h1 {
-    color: #ffffff;
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-/* Injeção da descrição via CSS para ficar igual ao login */
-.imagem::after {
-    content: "Sistema inteligente para gestão do ciclo de vida de produtos.";
-    color: #ffffff;
-    font-size: 1.15rem;
-    font-weight: 400;
-    line-height: 1.4;
-    max-width: 280px;
-}
-
-/* Painel do Formulário de Cadastro */
-.cadastro {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    background-color: #ffffff;
-    padding: 30px 20px;
-    overflow-y: auto; /* Permite rolar o formulário se a tela for pequena */
+    overflow-y: auto;
 }
 
-/* ==========================================================================
-   4. CARTÃO DE CADASTRO E ENTRADAS (INPUTS)
-   ========================================================================== */
-.card {
-    background-color: #EFE6DD; /* Bege claro */
+/* ==========================================================
+   CARD
+   ========================================================== */
+
+.cadastro-secao {
     width: 100%;
-    max-width: 480px; /* Um pouco mais largo para acomodar melhor os campos */
-    padding: 35px 40px;
+    max-width: 850px; /* Reduzido de 980px para ficar mais compacto */
+}
+
+.card-cadastro {
+    background: #FFF;
     border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    margin: auto 0; /* Centraliza verticalmente na área de rolagem */
+    padding: 30px; /* Reduzido de 45px */
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    border: 1px solid rgba(51,30,17,.08);
 }
 
-.card h2 {
+.card-cadastro h1 {
     text-align: center;
     color: #331E11;
-    font-size: 2rem;
+    margin-bottom: 20px; /* Reduzido de 40px */
+    font-size: 1.7rem; /* Levemente menor (era 2rem) */
     font-weight: 700;
-    margin-bottom: 20px;
 }
 
-label {
-    display: block;
-    color: #331E11;
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 4px;
-    margin-top: 12px; /* Espaçamento vertical equilibrado */
+/* ==========================================================
+   FORMULÁRIO
+   ========================================================== */
+
+#formCadastro{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:35px;
+
 }
 
-.campo {
-    position: relative;
+.coluna{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+/* ==========================================================
+   CAMPOS
+   ========================================================== */
+
+.grupo{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.grupo label{
+
+    font-weight:600;
+
+    color:#331E11;
+
+    margin-bottom:8px;
+
+    font-size:.95rem;
+
+}
+
+/* ==========================================================
+   INPUTS
+   ========================================================== */
+
+.campo{
+
+    display:flex;
+
+    align-items:center;
+
+    background:#fff;
+
+    border:2px solid #DDD;
+
+    border-radius:12px;
+
+    padding:0 15px;
+
+    height:56px;
+
+    transition:.25s;
+
+}
+
+.campo:hover{
+
+    border-color:#DE9E52;
+
+}
+
+.campo:focus-within{
+
+    border-color:#DE9E52;
+
+    box-shadow:0 0 0 4px rgba(222,158,82,.15);
+
+}
+
+.campo i:first-child{
+
+    color:#A86A2A;
+
+    width:22px;
+
+    margin-right:10px;
+
+}
+
+.campo input{
+
+    flex:1;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    font-size:15px;
+
+    color:#331E11;
+
+}
+
+.campo select{
+
+    flex:1;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    font-size:15px;
+
+    color:#331E11;
+
+    appearance:none;
+
+}
+
+.campo .fa-eye,
+.campo .fa-eye-slash{
+
+    cursor:pointer;
+
+    color:#888;
+
+    transition:.2s;
+
+}
+
+.campo .fa-eye:hover,
+.campo .fa-eye-slash:hover{
+
+    color:#DE9E52;
+
+}
+
+/* ==========================================================
+   BARRA DE SENHA
+   ========================================================== */
+
+.forcaSenha{
+
+    width:100%;
+
+    height:8px;
+
+    background:#ddd;
+
+    border-radius:20px;
+
+    overflow:hidden;
+    margin-top:8px 0;
+
+}
+
+#barraForca{
+
+    width:0%;
+
+    height:100%;
+
+    transition:.3s ease;
+
+    border-radius:10px;
+
+}
+
+.texto-forca{
+
+    margin-top:13px;
+
+    margin-bottom:15px;
+
+    font-size:.82rem;
+
+    font-weight:600;
+
+}
+
+/* ==========================================================
+   ERROS
+   ========================================================== */
+
+.erro{
+
+    min-height:18px;
+
+    margin-top:5px;
+
+    color:#D63B3B;
+
+    font-size:13px;
+
+    font-weight:500;
+
+}
+
+/* ==========================================================
+   BOTÃO
+   ========================================================== */
+
+.linhaBotao {
+    grid-column: 1 / 3;
     display: flex;
-    align-items: center;
-    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
 }
 
-.campo input {
-    width: 100%;
-    padding: 11px 50px 11px 15px; /* Espaço na direita para os ícones */
-    border: 2px solid #331E11;
-    border-radius: 12px;
-    background-color: transparent;
-    font-size: 0.95rem;
-    color: #331E11;
-    font-weight: 500;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-/* Posicionamento dos Ícones no Canto Direito */
-.campo i {
-    position: absolute;
-    right: 18px;
-    color: #331E11;
-    font-size: 1rem;
-    transition: color 0.2s;
-}
-
-/* Ícones de alternar senha (olhos) mudam o cursor */
-.campo i#toggleSenha,
-.campo i#toggleConfirmar {
-    cursor: pointer;
-}
-
-.campo i#toggleSenha:hover,
-.campo i#toggleConfirmar:hover {
-    color: #DE9E52;
-}
-
-/* Ícones estáticos (user, envelope) não interferem no clique do input */
-.campo i.fa-user,
-.campo i.fa-envelope {
-    pointer-events: none;
-}
-
-/* ==========================================================================
-   5. SELEÇÃO DO TIPO DE USUÁRIO (FIELDSET & RADIOS)
-   ========================================================================== */
-fieldset.tipoUsuario {
-    border: 2px solid #331E11;
-    border-radius: 12px;
-    padding: 12px 15px;
-    margin-top: 15px;
-    margin-bottom: 5px;
-}
-
-fieldset.tipoUsuario legend {
-    color: #331E11;
-    font-weight: 600;
-    font-size: 0.85rem;
-    padding: 0 8px;
-}
-
-.opcao {
-    display: inline-flex;
-    align-items: center;
-    margin-right: 25px;
-    margin-top: 4px;
-    cursor: pointer;
-    color: #331E11;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-/* Estilização moderna e direta para as bolinhas do Radio */
-.opcao input[type="radio"] {
-    margin-right: 8px;
-    accent-color: #DE9E52; /* Pinta o rádio nativo com a cor caramelo */
-    width: 17px;
-    height: 17px;
-}
-
-/* ==========================================================================
-   6. INTEGRACAO COM O JAVASCRIPT (VALIDAÇÕES DO cadastro.js)
-   ========================================================================== */
-.campo.sucesso input {
-    border-color: #2E7D32;
-    background-color: rgba(46, 125, 50, 0.02);
-}
-.campo.sucesso i {
-    color: #2E7D32 !important;
-}
-
-.campo.erroCampo input {
-    border-color: #D32F2F;
-    background-color: rgba(211, 47, 47, 0.02);
-}
-.campo.erroCampo i {
-    color: #D32F2F !important;
-}
-
-/* Mensagens de erro embaixo de cada campo e do fieldset */
-.erro {
-    color: #D32F2F;
-    font-size: 0.78rem;
-    font-weight: 500;
-    margin-top: 4px;
-    margin-left: 4px;
-    display: none; /* Ativado via JS alterando para display: block */
-}
-
-/* ==========================================================================
-   7. BOTÃO E LINKS
-   ========================================================================== */
-button[type="submit"] {
-    width: 100%;
-    padding: 13px;
-    background-color: #DE9E52; /* Cor Caramelo */
+#btnCadastrar {
+    background: #DE9E52;
     color: #331E11;
     border: none;
-    border-radius: 30px; /* Formato pílula */
-    font-size: 0.95rem;
+    border-radius: 14px;
+    padding: 12px 40px; /* Reduzido de 16px 55px */
+    font-size: 15px; /* Reduzido de 16px */
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
     cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.2s;
+    transition: .25s;
+    box-shadow: 0 8px 20px rgba(222,158,82,.30);
 }
 
-button[type="submit"]:hover {
-    background-color: #cb8d43;
+#btnCadastrar:hover{
+
+    background:#D28B35;
+
+    transform:translateY(-2px);
+
 }
 
-.loginLink {
-    text-align: center;
-    margin-top: 18px;
-    font-size: 0.88rem;
-    color: #331E11;
-    font-weight: 500;
+#btnCadastrar:active{
+
+    transform:scale(.98);
+
 }
 
-.loginLink a {
-    color: #DE9E52;
-    text-decoration: none;
-    font-weight: 700;
-    margin-left: 3px;
+/* ==========================================================
+   SUCESSO / ERRO DOS CAMPOS
+   ========================================================== */
+
+.erroCampo{
+
+    border-color:#dc3545 !important;
+
 }
 
-.loginLink a:hover {
-    text-decoration: underline;
+.sucesso{
+
+    border-color:#28a745 !important;
+
 }
 
-/* ==========================================================================
-   8. RESPONSIVIDADE (MOBILE)
-   ========================================================================== */
-@media (max-width: 768px) {
-    .imagem {
-        display: none;
+/* ==========================================================
+   RESPONSIVO
+   ========================================================== */
+
+@media(max-width:900px){
+
+    .card-cadastro{
+
+        padding:30px;
+
     }
-    header {
-        padding: 0 20px;
+
+    #formCadastro{
+
+        grid-template-columns:1fr;
+
+        gap:15px;
+
     }
-    .cadastro {
-        padding: 15px;
+
+    .linhaBotao{
+
+        grid-column:1;
+
     }
-    .card {
-        box-shadow: none;
-        padding: 25px 20px;
+
+}
+
+@media(max-width:600px){
+
+    .conteudo-principal{
+
+        padding:15px;
+
     }
+
+    .card-cadastro{
+
+        padding:20px;
+
+        border-radius:15px;
+
+    }
+
+    .card-cadastro h1{
+
+        font-size:1.6rem;
+
+    }
+
+    #btnCadastrar{
+
+        width:100%;
+
+    }
+
+}
+#formCadastro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px; /* Reduzido (se antes estava maior, 15px é o ideal) */
 }
