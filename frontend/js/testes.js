@@ -1,27 +1,53 @@
 // ==========================================================================
-// SERVIÇO DE TESTES (Mock Back-end)
+// CONFIGURAÇÃO DA API (Conexão Real com o Back-End)
 // ==========================================================================
+const API_URL = "https://projeto-tcc-senai-production.up.railway.app"; // Substitua pela sua URL real do Railway se necessário
+
 const TesteService = {
-    listarTestes: async () => JSON.parse(localStorage.getItem('testes_producao')) || [],
-    criarTeste: async (dataTeste, resultado, idUsuario, idVersaoReceita) => {
-        const testes = await TesteService.listarTestes();
-        const novoTeste = { id: Date.now(), data_teste: dataTeste, resultado: resultado, idUsuario: idUsuario, idVersao_receita: idVersaoReceita };
-        testes.push(novoTeste);
-        localStorage.setItem('testes_producao', JSON.stringify(testes));
+    listarTestes: async () => {
+        const response = await fetch(`${API_URL}/teste`);
+        if (!response.ok) throw new Error("Erro ao buscar testes do servidor");
+        return await response.json();
     },
-    editarTeste: async (idTeste, dataTeste, resultado, idVersaoReceita) => {
-        let testes = await TesteService.listarTestes();
-        const index = testes.findIndex(t => t.id == idTeste);
-        if (index !== -1) {
-            testes[index].data_teste = dataTeste;
-            testes[index].resultado = resultado;
-            testes[index].idVersao_receita = idVersaoReceita;
-            localStorage.setItem('testes_producao', JSON.stringify(testes));
-        }
+    criarTeste: async (dataTeste, resultado, idUsuario, idVersaoReceita) => {
+        // Envia estruturado de acordo com o @ManyToOne da Model Java
+        const payload = {
+            dataTeste: dataTeste ? `${dataTeste}T00:00:00` : new Date().toISOString(),
+            resultado: resultado,
+            usuario: { id: idUsuario },
+            versaoReceita: { id: idVersaoReceita }
+        };
+
+        const response = await fetch(`${API_URL}/teste`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error("Erro ao salvar novo teste");
+        return await response.json();
+    },
+    editarTeste: async (idTeste, dataTeste, resultado, idUsuario, idVersaoReceita) => {
+        const payload = {
+            id: parseInt(idTeste),
+            dataTeste: dataTeste.includes("T") ? dataTeste : `${dataTeste}T00:00:00`,
+            resultado: resultado,
+            usuario: { id: idUsuario },
+            versaoReceita: { id: idVersaoReceita }
+        };
+
+        const response = await fetch(`${API_URL}/teste/${idTeste}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error("Erro ao atualizar teste");
+        return await response.json();
     },
     removerTeste: async (idTeste) => {
-        let testes = await TesteService.listarTestes();
-        localStorage.setItem('testes_producao', JSON.stringify(testes.filter(t => t.id != idTeste)));
+        const response = await fetch(`${API_URL}/teste/${idTeste}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) throw new Error("Erro ao excluir teste");
     }
 };
 
@@ -32,117 +58,126 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ==========================================================================
-// RENDERIZAR TABELA ESTILO CARDS (Identico à Imagem)
+// RENDERIZAR TABELA REFEITA COM DTO DO JAVA
 // ==========================================================================
 async function renderizarTabelaTestes() {
     const tbody = document.getElementById("tabelaTestesBody");
     if (!tbody) return;
 
-    tbody.innerHTML = "";
-    const testes = await TesteService.listarTestes();
-    const receitas = await ReceitaService.listarReceitas();
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#555; padding:30px;">Carregando testes...</td></tr>`;
 
-    if (testes.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#999; padding:30px;">Nenhum teste registrado.</td></tr>`;
-        return;
-    }
+    try {
+        // Puxa a lista direto do banco de dados via DTO
+        const testes = await TesteService.listarTestes();
 
-    for (const teste of testes) {
-        let nomeReceita = "Desconhecida";
-        let numeroVersao = "N/A";
-        let idReceitaReal = null;
-        
-        for (const r of receitas) {
-            const versoes = await ReceitaService.listarVersoesPorReceita(r.id);
-            const versaoEncontrada = versoes.find(v => v.id == teste.idVersao_receita);
-            if (versaoEncontrada) {
-                nomeReceita = r.nome;
-                numeroVersao = versaoEncontrada.numero_versao;
-                idReceitaReal = r.id;
-                break;
-            }
+        tbody.innerHTML = "";
+
+        if (testes.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#999; padding:30px;">Nenhum teste registrado.</td></tr>`;
+            return;
         }
 
-        const [ano, mes, dia] = teste.data_teste.split('-');
-        const dataFormatada = `${dia}/${mes}/${ano}`;
-        const resultadoLimpo = teste.resultado.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+        testes.forEach(teste => {
+            // Trata a data vinda do LocalDateTime do Java
+            let dataFormatada = "N/A";
+            let dataParaInput = "";
+            if (teste.dataTeste) {
+                const parteData = teste.dataTeste.split('T')[0]; // Pega YYYY-MM-DD
+                dataParaInput = parteData;
+                const [ano, mes, dia] = parteData.split('-');
+                dataFormatada = `${dia}/${mes}/${ano}`;
+            }
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>
-                <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Data</div>
-                <div style="color: #2D1A11; font-weight: 500;">${dataFormatada}</div>
-            </td>
-            <td>
-                <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Receita</div>
-                <div style="color: #2D1A11; font-weight: 500;">${nomeReceita}</div>
-            </td>
-            <td>
-                <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Versão</div>
-                <div style="color: #2D1A11; font-weight: 500;">${numeroVersao}</div>
-            </td>
-            <td>
-                <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Responsável</div>
-                <div style="color: #2D1A11; font-weight: 500;">Leandro</div>
-            </td>
-            <td>
-                <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Resultado</div>
-                <div style="color: #2D1A11; font-weight: 500;">${teste.resultado}</div>
-            </td>
-            <td style="text-align: center; width: 140px;">
-                <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
-                    <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;" onclick="abrirEdicaoTeste(${teste.id}, ${idReceitaReal}, ${teste.idVersao_receita}, '${teste.data_teste}', '${resultadoLimpo}')">
-                        <div style="background-color: #DE9E52; color: #fff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px;">
-                            <i class="fa-solid fa-pencil"></i>
+            const resultadoLimpo = teste.resultado ? teste.resultado.replace(/'/g, "\\'").replace(/"/g, "&quot;") : "";
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>
+                    <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Data</div>
+                    <div style="color: #2D1A11; font-weight: 500;">${dataFormatada}</div>
+                </td>
+                <td>
+                    <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Receita</div>
+                    <div style="color: #2D1A11; font-weight: 500;">${teste.receita || "Não informada"}</div>
+                </td>
+                <td>
+                    <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Versão</div>
+                    <div style="color: #2D1A11; font-weight: 500;">Versão ${teste.numeroVersao || "N/A"}</div>
+                </td>
+                <td>
+                    <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Responsável</div>
+                    <div style="color: #2D1A11; font-weight: 500;">${teste.usuario || "Leandro"}</div>
+                </td>
+                <td>
+                    <div style="font-size: 0.85rem; color: #555; margin-bottom: 2px;">Resultado</div>
+                    <div style="color: #2D1A11; font-weight: 500;">${teste.resultado || "-"}</div>
+                </td>
+                <td style="text-align: center; width: 140px;">
+                    <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
+                        <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;" 
+                             onclick="abrirEdicaoTeste(${teste.id}, '${dataParaInput}', '${resultadoLimpo}')">
+                            <div style="background-color: #DE9E52; color: #fff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px;">
+                                <i class="fa-solid fa-pencil"></i>
+                            </div>
+                            <span style="font-size: 0.75rem; color: #555;">Editar</span>
                         </div>
-                        <span style="font-size: 0.75rem; color: #555;">Editar</span>
-                    </div>
-                    
-                    <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;" onclick="removerTeste(${teste.id})">
-                        <div style="background-color: #C82333; color: #fff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px;">
-                            <i class="fa-solid fa-trash-can"></i>
+                        
+                        <div style="display: flex; flex-direction: column; align-items: center; cursor: pointer;" onclick="executarExclusaoTeste(${teste.id})">
+                            <div style="background-color: #C82333; color: #fff; width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px;">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </div>
+                            <span style="font-size: 0.75rem; color: #555;">Excluir</span>
                         </div>
-                        <span style="font-size: 0.75rem; color: #555;">Excluir</span>
                     </div>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(tr);
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#c93b3b; padding:30px;">Não foi possível carregar a tabela de testes remota.</td></tr>`;
     }
 }
 
 // ==========================================================================
-// FUNÇÕES GLOBAIS DE AÇÃO E MODAL
+// INTERAÇÕES E MODAL
 // ==========================================================================
-window.removerTeste = async function(idTeste) {
-    if (confirm("Excluir este registro de teste?")) {
-        await TesteService.removerTeste(idTeste);
-        renderizarTabelaTestes();
+window.executarExclusaoTeste = async function(idTeste) {
+    if (confirm("Deseja realmente remover permanentemente este registro de teste do sistema?")) {
+        try {
+            await TesteService.removerTeste(idTeste);
+            renderizarTabelaTestes();
+        } catch (err) {
+            alert(err.message);
+        }
     }
 }
 
-window.abrirEdicaoTeste = async function(idTeste, idReceita, idVersao, data, resultado) {
+window.abrirEdicaoTeste = async function(idTeste, data, resultado) {
     document.getElementById("modalTesteTitulo").textContent = "Editar Resultado de Teste";
     document.getElementById("editIndexTeste").value = idTeste;
     document.getElementById("testeData").value = data;
     document.getElementById("testeResultado").value = resultado;
 
-    const receitas = await ReceitaService.listarReceitas();
-    const selectReceita = document.getElementById("testeReceita");
-    selectReceita.innerHTML = '<option value="" disabled>Selecione a receita...</option>';
-    receitas.forEach(r => selectReceita.innerHTML += `<option value="${r.id}">${r.nome}</option>`);
-    selectReceita.value = idReceita;
+    try {
+        // Carrega receitas do back-end para preencher o select principal
+        const responseReceitas = await fetch(`${API_URL}/receita`);
+        const receitas = await responseReceitas.json();
+        
+        const selectReceita = document.getElementById("testeReceita");
+        selectReceita.innerHTML = '<option value="" disabled selected>Selecione a receita...</option>';
+        receitas.forEach(r => selectReceita.innerHTML += `<option value="${r.id}">${r.nome}</option>`);
 
-    const versoes = await ReceitaService.listarVersoesPorReceita(idReceita);
-    const selectVersao = document.getElementById("testeVersao");
-    selectVersao.innerHTML = '<option value="" disabled>Selecione a versão testada...</option>';
-    versoes.forEach(v => selectVersao.innerHTML += `<option value="${v.id}">${v.numero_versao} - ${v.descricao}</option>`);
-    
-    selectVersao.disabled = false;
-    selectVersao.style.backgroundColor = "#fff";
-    selectVersao.value = idVersao;
+        // Deixa a seleção da versão aberta para o usuário escolher a nova se desejar alterar
+        const selectVersao = document.getElementById("testeVersao");
+        selectVersao.innerHTML = '<option value="" disabled selected>Selecione a versão testada...</option>';
+        selectVersao.disabled = false;
+        selectVersao.style.backgroundColor = "#fff";
 
-    document.getElementById("modalTeste").style.display = "flex";
+        document.getElementById("modalTeste").style.display = "flex";
+    } catch (err) {
+        alert("Erro ao abrir componentes de edição de receita.");
+    }
 }
 
 async function inicializarModalTeste() {
@@ -160,27 +195,39 @@ async function inicializarModalTeste() {
         selectVersao.style.backgroundColor = "#eee";
         document.getElementById("testeData").value = new Date().toISOString().split('T')[0];
 
-        const receitas = await ReceitaService.listarReceitas();
-        selectReceita.innerHTML = '<option value="" disabled selected>Selecione a receita...</option>';
-        receitas.forEach(r => selectReceita.innerHTML += `<option value="${r.id}">${r.nome}</option>`);
-
-        modal.style.display = "flex";
+        try {
+            const response = await fetch(`${API_URL}/receita`);
+            const receitas = await response.json();
+            selectReceita.innerHTML = '<option value="" disabled selected>Selecione a receita...</option>';
+            receitas.forEach(r => selectReceita.innerHTML += `<option value="${r.id}">${r.nome}</option>`);
+            modal.style.display = "flex";
+        } catch (err) {
+            alert("Erro ao buscar receitas no servidor.");
+        }
     });
 
     document.getElementById("btnFecharModalTeste").addEventListener("click", () => modal.style.display = "none");
 
+    // Evento dinâmico de busca de versões ao alterar a receita selecionada
     selectReceita.addEventListener("change", async (e) => {
-        const versoes = await ReceitaService.listarVersoesPorReceita(parseInt(e.target.value));
-        selectVersao.innerHTML = '<option value="" disabled selected>Selecione a versão...</option>';
+        selectVersao.innerHTML = '<option value="" disabled selected>Buscando versões...</option>';
         
-        if (versoes.length === 0) {
-            selectVersao.innerHTML = '<option value="" disabled selected>Nenhuma versão cadastrada</option>';
-            selectVersao.disabled = true;
-            selectVersao.style.backgroundColor = "#eee";
-        } else {
-            versoes.forEach(v => selectVersao.innerHTML += `<option value="${v.id}">${v.numero_versao}</option>`);
-            selectVersao.disabled = false;
-            selectVersao.style.backgroundColor = "#fff";
+        try {
+            const response = await fetch(`${API_URL}/versaoreceita/receita/${e.target.value}`); // Alinhe esse endpoint com o seu VersaoReceitaController se necessário
+            const versoes = await response.json();
+            
+            selectVersao.innerHTML = '<option value="" disabled selected>Selecione a versão...</option>';
+            if (versoes.length === 0) {
+                selectVersao.innerHTML = '<option value="" disabled selected>Nenhuma versão cadastrada</option>';
+                selectVersao.disabled = true;
+                selectVersao.style.backgroundColor = "#eee";
+            } else {
+                versoes.forEach(v => selectVersao.innerHTML += `<option value="${v.id}">Versão ${v.numeroVersao || v.numero_versao}</option>`);
+                selectVersao.disabled = false;
+                selectVersao.style.backgroundColor = "#fff";
+            }
+        } catch (err) {
+            selectVersao.innerHTML = '<option value="" disabled selected>Erro ao carregar versões</option>';
         }
     });
 }
@@ -193,12 +240,22 @@ function configurarFormularioTeste() {
         const dataTeste = document.getElementById("testeData").value;
         const resultado = document.getElementById("testeResultado").value.trim();
 
-        if (isNaN(idVersao)) return alert("Selecione uma versão válida.");
+        if (isNaN(idVersao)) {
+            alert("Por favor, selecione uma versão válida da receita.");
+            return;
+        }
 
-        if (idEdit === "") await TesteService.criarTeste(dataTeste, resultado, 1, idVersao);
-        else await TesteService.editarTeste(idEdit, dataTeste, resultado, idVersao);
-        
-        document.getElementById("modalTeste").style.display = "none";
-        renderizarTabelaTestes();
+        try {
+            // idUsuario mocando em 1 temporariamente até implementarem Login/Auth
+            if (idEdit === "") {
+                await TesteService.criarTeste(dataTeste, resultado, 1, idVersao);
+            } else {
+                await TesteService.editarTeste(idEdit, dataTeste, resultado, 1, idVersao);
+            }
+            document.getElementById("modalTeste").style.display = "none";
+            renderizarTabelaTestes();
+        } catch (err) {
+            alert("Erro de Restrição: " + err.message);
+        }
     });
 }
