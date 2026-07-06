@@ -1,13 +1,14 @@
 // ======================================================
 // ELEMENTOS
 // ======================================================
+let usuarioEmEdicao = null;
 const API_URL = "https://projeto-tcc-senai-production.up.railway.app";
 
 const formCadastro = document.getElementById("formCadastro");
 
+const usuario = document.getElementById("usuario");
 const nome = document.getElementById("nome");
 const email = document.getElementById("email");
-const usuario = document.getElementById("usuario");
 const senha = document.getElementById("senha");
 const confirmarSenha = document.getElementById("confirmarSenha");
 
@@ -404,7 +405,7 @@ confirmarSenha.addEventListener("input",validarConfirmarSenha);
 
 
 // ======================================================
-// SUBMIT (CONECTADO NA API)
+// SUBMIT (CONECTADO NA API CONFIGURADO PARA SPRING BOOT)
 // ======================================================
 formCadastro.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -412,20 +413,25 @@ formCadastro.addEventListener("submit", async (event) => {
     const valido =
         validarNome() &&
         validarEmail() &&
-        validarUsuario() &&
+        // Se você não usa 'usuario' (nickname) no banco, pode remover essa validação
+        // validarUsuario() && 
         validarSenha() &&
         validarConfirmarSenha() &&
         validarTipoUsuario();
 
     if (!valido) return;
 
-    // Monta o objeto com os dados que vão para o servidor
+    // Obtém o ID do perfil selecionado na tela (deve ser um número correspondente ao ID no banco)
+    const idPerfilSelecionado = document.querySelector('input[name="tipoUsuario"]:checked').value;
+
+    // Monta o objeto EXATAMENTE como a API mapeia na classe Usuario.java
     const dadosUsuario = {
         nome: nome.value.trim(),
         email: email.value.trim(),
-        usuario: usuario.value.trim(),
         senha: senha.value,
-        tipoUsuario: document.querySelector('input[name="tipoUsuario"]:checked').value
+        perfil: {
+            id: parseInt(idPerfilSelecionado) // Transforma em número para o Long do Java
+        }
     };
 
     // Desativa o botão enquanto carrega para o usuário não clicar 2 vezes
@@ -435,10 +441,13 @@ formCadastro.addEventListener("submit", async (event) => {
     try {
         if (usuarioEmEdicao !== null) {
             // MODO EDIÇÃO: Envia um PUT para a API atualizar o usuário (usando o ID)
-            const resposta = await fetch(`${API_URL}/usuarios/${usuarioEmEdicao}`, {
+            const resposta = await fetch(`${API_URL}/usuario/${usuarioEmEdicao}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dadosUsuario)
+                body: JSON.stringify({
+                    id: usuarioEmEdicao, // O seu UsuarioController recebe o objeto completo no corpo
+                    ...dadosUsuario
+                })
             });
 
             if (!resposta.ok) throw new Error("Erro ao atualizar o colaborador.");
@@ -449,16 +458,20 @@ formCadastro.addEventListener("submit", async (event) => {
             
         } else {
             // MODO CRIAÇÃO: Envia um POST para a API salvar o novo usuário
-            const resposta = await fetch(`${API_URL}/usuarios`, {
+            const resposta = await fetch(`${API_URL}/usuario`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(dadosUsuario)
             });
 
             if (!resposta.ok) {
-                const erro = await resposta.json();
-                // A API pode retornar erro se o usuário já existir, mostramos isso:
-                throw new Error(erro.message || "Erro ao cadastrar. Verifique se o usuário já existe.");
+                // Tenta ler a mensagem de erro vinda do Spring Boot
+                try {
+                    const erro = await resposta.json();
+                    throw new Error(erro.message || "Erro ao cadastrar. Verifique os dados.");
+                } catch (e) {
+                    throw new Error("E-mail já cadastrado ou dados inválidos.");
+                }
             }
 
             alert("Colaborador cadastrado com sucesso!");
@@ -532,33 +545,39 @@ async function listarUsuarios() {
     const listaContainer = document.getElementById("listaUsuarios");
     if (!listaContainer) return;
 
-    listaContainer.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Carregando colaboradores...</td></tr>";
+    listaContainer.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Carregando colaboradores...</td></tr>";
 
     try {
-        const resposta = await fetch(`${API_URL}/usuarios`);
-        if (!resposta.ok) throw new Error("Erro de comunicação com o servidor.");
+        // Faz a busca na rota do Java
+        const resposta = await fetch(`${API_URL}/usuario`);
+        
+        // Se der erro 404, avisa detalhadamente no console
+        if (!resposta.ok) {
+            console.error(`Erro do Servidor: Status ${resposta.status} na rota /usuarios`);
+            throw new Error("Rota não encontrada no servidor.");
+        }
 
-        const usuarios = await resposta.json(); // Transforma a resposta da API em objeto JS
+        const usuarios = await resposta.json(); 
         
         if (usuarios.length === 0) {
-            listaContainer.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Nenhum colaborador cadastrado.</td></tr>";
+            listaContainer.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Nenhum colaborador cadastrado.</td></tr>";
             return;
         }
 
         listaContainer.innerHTML = "";
         usuarios.forEach((u) => {
+            // Note que seu UsuarioDTO do Java usa 'perfil' como String (u.perfil)
             listaContainer.innerHTML += `
                 <tr>
                     <td>${u.nome}</td>
                     <td>${u.email}</td>
-                    <td>${u.usuario}</td>
-                    <td>${u.tipoUsuario}</td>
+                    <td>${u.perfil || 'Não informado'}</td>
                     <td>
                         <div class="grupo-acoes">
-                            <button class="btn-acao editar" onclick="prepararEdicao('${u.id}')">
+                            <button class="btn-acao editar" onclick="prepararEdicao(${u.id})">
                                 <i class="fa-solid fa-pen"></i>
                             </button>
-                            <button class="btn-acao excluir" onclick="deletarUsuario('${u.id}')">
+                            <button class="btn-acao excluir" onclick="deletarUsuario(${u.id})">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
@@ -567,49 +586,21 @@ async function listarUsuarios() {
             `;
         });
     } catch (erro) {
-        listaContainer.innerHTML = `<tr><td colspan='5' style='text-align:center; color:red;'>Falha ao carregar os dados.</td></tr>`;
-        console.error(erro);
+        listaContainer.innerHTML = `<tr><td colspan='4' style='text-align:center; color:red;'>Falha ao carregar os dados.</td></tr>`;
+        console.error("Detalhes do erro na listagem:", erro);
     }
 }
-
-// Quando clicar em EDITAR na tabela
-window.prepararEdicao = async function(id) {
-    try {
-        // Busca os dados APENAS desse usuário lá no banco
-        const resposta = await fetch(`${API_URL}/usuarios/${id}`);
-        const u = await resposta.json();
-
-        // Preenche os campos
-        nome.value = u.nome;
-        email.value = u.email;
-        usuario.value = u.usuario;
-        
-        // (Geralmente a senha não vem da API por segurança, então deixamos em branco para ele criar uma nova se quiser)
-        senha.value = "";
-        confirmarSenha.value = "";
-
-        const radio = document.querySelector(`input[name="tipoUsuario"][value="${u.tipoUsuario}"]`);
-        if (radio) radio.checked = true;
-
-        btnCadastrar.textContent = "Salvar Alterações";
-        
-        // Guarda o ID do BANCO na variável, para o SUBMIT saber quem atualizar
-        usuarioEmEdicao = id; 
-        
-    } catch (erro) {
-        alert("Erro ao buscar os dados do usuário para edição.");
-    }
-};
 
 // Quando clicar em DELETAR na tabela
 window.deletarUsuario = async function(id) {
     if (confirm("Tem certeza que deseja excluir este colaborador definitivamente?")) {
         try {
-            // Manda a ordem de DELETE para o banco
-            const resposta = await fetch(`${API_URL}/usuarios/${id}`, { method: "DELETE" });
+            // Manda a ordem de DELETE para a rota correspondente ao UsuarioService.deletarUsuario
+            const resposta = await fetch(`${API_URL}/usuario/${id}`, { method: "DELETE" });
             
             if (resposta.ok) {
-                listarUsuarios(); // Se deletou, recarrega a tabela
+                alert("Colaborador excluído com sucesso!");
+                listarUsuarios(); // Recarrega a tabela limpa
             } else {
                 throw new Error("Erro ao excluir.");
             }
@@ -619,27 +610,65 @@ window.deletarUsuario = async function(id) {
     }
 };
 
-// Função para carregar os dados no formulário para edição
-window.prepararEdicao = function(index) {
-    let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-    const u = usuarios[index];
+// Quando clicar em DELETAR na tabela
+window.deletarUsuario = async function(id) {
+    if (confirm("Tem certeza que deseja excluir este colaborador definitivamente?")) {
+        try {
+            // Manda a ordem de DELETE para a rota correspondente ao UsuarioService.deletarUsuario
+            const resposta = await fetch(`${API_URL}/usuario/${id}`, { method: "DELETE" });
+            
+            if (resposta.ok) {
+                alert("Colaborador excluído com sucesso!");
+                listarUsuarios(); // Recarrega a tabela limpa
+            } else {
+                throw new Error("Erro ao excluir.");
+            }
+        } catch (erro) {
+            alert("Não foi possível excluir o colaborador.");
+        }
+    }
+};
 
-    // Preenche os inputs com os dados atuais
-    nome.value = u.nome;
-    email.value = u.email;
-    usuario.value = u.usuario;
-    senha.value = u.senha;
-    confirmarSenha.value = u.senha;
+// Apenas UMA função de preparar edição (conectada ao seu Java)
+window.prepararEdicao = async function(id) {
+    try {
+        // Busca o usuário específico pelo ID no back-end Java
+        const resposta = await fetch(`${API_URL}/usuario/${id}`);
+        
+        if (!resposta.ok) {
+            throw new Error(`Erro no servidor: Status ${resposta.status}`);
+        }
 
-    // Seleciona o radio button correto (Administrador ou Funcionário)
-    const radio = document.querySelector(`input[name="tipoUsuario"][value="${u.tipoUsuario}"]`);
-    if (radio) radio.checked = true;
+        const u = await resposta.json();
 
-    // Muda o texto do botão para indicar que está editando
-    btnCadastrar.textContent = "Salvar Alterações";
-    
-    // Guarda o índice que estamos editando
-    usuarioEmEdicao = index;
+        // Preenche os inputs da tela com os dados reais do banco
+        nome.value = u.nome;
+        email.value = u.email;
+        
+        // Deixamos as senhas em branco por segurança (se o admin não digitar nada, mantém a atual)
+        if (typeof senha !== 'undefined') senha.value = "";
+        if (typeof confirmarSenha !== 'undefined') confirmarSenha.value = "";
+
+        // Marca o botão de rádio correto comparando com a String do Perfil vinda do Java DTO
+        // Certifique-se de que o value no HTML seja exatamente igual ao que vem do banco (ex: "Administrador")
+        const radio = document.querySelector(`input[name="tipoUsuario"][value="${u.perfil}"]`);
+        if (radio) radio.checked = true;
+
+        // Avisa visualmente o botão que o modo atual mudou para edição
+        if (typeof btnCadastrar !== 'undefined') {
+            btnCadastrar.textContent = "Salvar Alterações";
+        }
+        
+        // 🌟 PASSO CRUCIAL: Guarda o ID numérico do Java na nossa variável global de controle
+        usuarioEmEdicao = id; 
+
+        // Rola a tela suavemente para o topo para o formulário ficar visível
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+    } catch (erro) {
+        console.error("Erro ao preparar edição:", erro);
+        alert("Erro ao buscar os dados do usuário para edição.");
+    }
 };
 
 // Função para deletar colaborador
@@ -651,5 +680,3 @@ window.deletarUsuario = function(index) {
         listarUsuarios(); // Atualiza a tabela
     }
 };
-
-let usuarioEmEdicao = null;
