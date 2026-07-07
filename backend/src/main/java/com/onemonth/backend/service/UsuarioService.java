@@ -31,8 +31,7 @@ public class UsuarioService {
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getPerfil().getNome(),
-                usuario.getAtualizadoEm() != null ? usuario.getAtualizadoEm().toString() : null
+                usuario.getPerfil().getNome()
         );
     }
 
