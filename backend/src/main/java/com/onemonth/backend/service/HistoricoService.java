@@ -7,6 +7,8 @@ import com.onemonth.backend.exception.ValidationException;
 import com.onemonth.backend.model.Historico;
 import com.onemonth.backend.repository.HistoricoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,16 +44,15 @@ public class HistoricoService {
         return repository.save(historico);
     }
 
-    public List<HistoricoDTO> listarHistoricos(){
+    public Page<HistoricoDTO> listarHistoricos(Long usuarioId, Long produtoId, String busca,
+                                               LocalDateTime dataInicio, LocalDateTime dataFim,
+                                               Pageable pageable){
 
-        List<Historico> historicos = repository.findAll();
+        Page<Historico> historicos = repository.buscarComFiltros(
+                usuarioId, produtoId, busca, dataInicio, dataFim, pageable
+        );
 
-        List<HistoricoDTO> historicosDTO = new ArrayList<>();
-
-        for(Historico historico : historicos){
-            historicosDTO.add(converterParaDTO(historico));
-        }
-        return historicosDTO;
+        return historicos.map(this::converterParaDTO);
     }
 
     public HistoricoDTO buscarPorId(Long id){

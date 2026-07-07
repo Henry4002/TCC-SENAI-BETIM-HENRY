@@ -14,10 +14,12 @@
         return;
     }
 
-    const usuario = JSON.parse(usuarioSalvo);
+const usuario = JSON.parse(usuarioSalvo);
 
-    if (typeof PAGINA_REQUER_ADMIN !== "undefined" && PAGINA_REQUER_ADMIN) {
-        if (usuario.perfil !== "Administrador") {
+    const spanNome = document.getElementById("nomeUsuarioHeader");
+    if (spanNome) spanNome.textContent = usuario.nome;
+
+    if (typeof PAGINA_REQUER_ADMIN !== "undefined" && PAGINA_REQUER_ADMIN) {        if (usuario.perfil !== "Administrador") {
             alert("Acesso restrito a administradores.");
             window.location.href = "telainicial.html";
         }

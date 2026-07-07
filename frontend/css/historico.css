@@ -1,0 +1,140 @@
+/* ==========================================================
+   HISTÓRICO DE ATIVIDADES
+   ========================================================== */
+
+.card-historico {
+    background: #FFF;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    border: 1px solid rgba(51,30,17,.08);
+    width: 100%;
+}
+
+.card-historico h1 {
+    text-align: center;
+    color: #331E11;
+    margin-bottom: 25px;
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
+/* BARRA DE FILTROS */
+.barra-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+    background: #F8F5F1;
+    padding: 20px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+}
+
+.filtro-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1 1 160px;
+}
+
+.filtro-campo label {
+    font-size: .82rem;
+    font-weight: 600;
+    color: #331E11;
+}
+
+.filtro-campo input,
+.filtro-campo select {
+    height: 42px;
+    border: 2px solid #DDD;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: .9rem;
+    color: #331E11;
+    background: #fff;
+    transition: .2s;
+}
+
+.filtro-campo input:focus,
+.filtro-campo select:focus {
+    outline: none;
+    border-color: #DE9E52;
+}
+
+.filtro-botoes {
+    display: flex;
+    gap: 10px;
+}
+
+#btnAplicarFiltros {
+    background: #DE9E52;
+    color: #331E11;
+    border: none;
+    border-radius: 10px;
+    padding: 0 20px;
+    height: 42px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+#btnAplicarFiltros:hover { background: #D28B35; }
+
+#btnLimparFiltros {
+    background: #fff;
+    color: #331E11;
+    border: 2px solid #DDD;
+    border-radius: 10px;
+    padding: 0 18px;
+    height: 42px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+#btnLimparFiltros:hover { border-color: #331E11; }
+
+/* TABELA (herda table/th/td do telaInicial.css) */
+#areaHistorico table td {
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ESTADOS */
+.mensagem-estado {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6d4c41;
+    font-size: .95rem;
+}
+
+.mensagem-estado.erro { color: #D63B3B; }
+
+/* MOSTRAR MAIS */
+.rodape-historico {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#btnMostrarMais {
+    background: #fff;
+    color: #331E11;
+    border: 2px solid #331E11;
+    border-radius: 12px;
+    padding: 10px 30px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
+}
+
+#btnMostrarMais:hover { background: #331E11; color: #fff; }
+#btnMostrarMais:disabled { opacity: .6; cursor: default; }
+
+@media (max-width: 700px) {
+    .barra-filtros { flex-direction: column; align-items: stretch; }
+    .filtro-botoes { justify-content: flex-end; }
+}

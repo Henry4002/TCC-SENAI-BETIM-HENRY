@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OneMonth | Histórico de Atividades</title>
+
+    <link rel="stylesheet" href="../css/telaInicial.css">
+    <link rel="stylesheet" href="../css/historico.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body class="interna-sistema">
+
+    <header>
+        <div class="header-esquerda">
+            <button id="btnMenuMobile" class="btn-menu-mobile">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <h2>Histórico de Atividades</h2>
+        </div>
+
+        <div class="usuario">
+            
+            <div class="perfil">
+                <i class="fa-regular fa-circle-user"></i>
+                <span>Administrador</span>
+            </div>
+
+            <a href="login.html" id="btnLogout">
+                Deslogar
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <aside id="menuLateral" class="menu-lateral"></aside>
+
+        <main>
+
+            <section class="card-historico">
+
+                <h1>Histórico de Atividades</h1>
+
+                <div class="barra-filtros">
+
+                    <div class="filtro-campo">
+                        <label for="filtroBusca">Buscar na ação</label>
+                        <input type="text" id="filtroBusca" placeholder="Ex: criou, editou, excluiu...">
+                    </div>
+
+                    <div class="filtro-campo">
+                        <label for="filtroUsuario">Usuário</label>
+                        <select id="filtroUsuario">
+                            <option value="">Todos os usuários</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-campo">
+                        <label for="filtroProduto">Produto</label>
+                        <select id="filtroProduto">
+                            <option value="">Todos os produtos</option>
+                        </select>
+                    </div>
+
+                    <div class="filtro-campo">
+                        <label for="filtroDataInicio">De</label>
+                        <input type="date" id="filtroDataInicio">
+                    </div>
+
+                    <div class="filtro-campo">
+                        <label for="filtroDataFim">Até</label>
+                        <input type="date" id="filtroDataFim">
+                    </div>
+
+                    <div class="filtro-botoes">
+                        <button type="button" id="btnAplicarFiltros">Aplicar filtros</button>
+                        <button type="button" id="btnLimparFiltros">Limpar</button>
+                    </div>
+
+                </div>
+
+                <div id="areaHistorico">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Usuário</th>
+                                <th>Ação</th>
+                                <th>Produto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoTabelaHistorico"></tbody>
+                    </table>
+
+                    <p id="mensagemEstado" class="mensagem-estado" style="display:none;"></p>
+
+                </div>
+
+                <div class="rodape-historico">
+                    <button type="button" id="btnMostrarMais" style="display:none;">Mostrar mais</button>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="../js/navegacaoLateral.js"></script>
+    <script src="../js/historico.js"></script>
+
+</body>
+
+</html>
