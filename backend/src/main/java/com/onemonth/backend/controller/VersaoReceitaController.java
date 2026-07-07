@@ -53,4 +53,10 @@ public class VersaoReceitaController {
         return ResponseEntity.noContent().build();
     }
 
+    @CrossOrigin(origins = "*")
+    @GetMapping("/receita/{receitaId}")
+    public List<VersaoReceitaDTO> listarVersoesPorReceita(@PathVariable Long receitaId){
+        return service.listarVersoesPorReceita(receitaId);
+    }
+
 }

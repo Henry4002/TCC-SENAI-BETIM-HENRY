@@ -84,4 +84,15 @@ public class VersaoReceitaService {
 
         repository.delete(versaoReceita);
     }
+
+    public List<VersaoReceitaDTO> listarVersoesPorReceita(Long receitaId){
+        List<VersaoReceita> versoes = repository.findByReceitaId(receitaId);
+        List<VersaoReceitaDTO> dtos = new ArrayList<>();
+
+        for(VersaoReceita v : versoes){
+            dtos.add(converterParaDTO(v));
+        }
+
+        return dtos;
+    }
 }
