@@ -16,6 +16,8 @@
 
 <body class="interna-sistema">
 
+    <script>const PAGINA_REQUER_ADMIN = true;</script>
+    <script src="../js/auth.js"></script>
     <!-- ================= HEADER ================= -->
 
     <header>
@@ -117,13 +119,8 @@
 
     <div class="cargo-bloco">
         <label>Cargo do Colaborador</label>
-        <div class="opcoes-cargo">
-            <label>
-                <input type="radio" name="tipoUsuario" value="Administrador" id="tipoUsuario" required> Administrador
-            </label>
-            <label>
-                <input type="radio" name="tipoUsuario" value="Funcionario" required> Funcionário
-            </label>
+        <div class="opcoes-cargo" id="opcoesCargo">
+            <!-- preenchido dinamicamente pelo JS a partir de GET /perfil -->
         </div>
         <p class="erro" id="erroTipoUsuario" aria-live="polite"></p>
     </div>
@@ -147,7 +144,7 @@
                         <tr style="border-bottom: 2px solid #DE9E52; color: #331E11;">
                             <th style="padding: 10px;">Nome</th>
                             <th style="padding: 10px;">E-mail (Gmail)</th>
-                            <th style="padding: 10px;">Usuário</th>
+                           
                             <th style="padding: 10px;">Cargo</th>
                             <th style="padding: 10px; text-align: center;">Ações</th>
                         </tr>

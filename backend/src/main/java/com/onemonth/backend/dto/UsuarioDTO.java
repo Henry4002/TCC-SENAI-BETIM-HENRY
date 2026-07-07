@@ -6,15 +6,25 @@ public class UsuarioDTO {
     private String nome;
     private String email;
     private String perfil;
+    private String atualizadoEm;
 
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(Long id, String nome, String email, String perfil) {
+    public UsuarioDTO(Long id, String nome, String email, String perfil, String atualizadoEm) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.perfil = perfil;
+        this.atualizadoEm = atualizadoEm;
+    }
+
+    public String getAtualizadoEm() {
+        return atualizadoEm;
+    }
+
+    public void setAtualizadoEm(String atualizadoEm) {
+        this.atualizadoEm = atualizadoEm;
     }
 
     public Long getId() {

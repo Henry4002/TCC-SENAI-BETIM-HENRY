@@ -27,7 +27,7 @@ const toggleConfirmar = document.getElementById("toggleConfirmar");
 
 const btnCadastrar = document.getElementById("btnCadastrar");
 
-const tipoUsuario = document.getElementById("tipoUsuario");
+
 
 
 // ======================================================
@@ -382,15 +382,15 @@ function validarConfirmarSenha(){
 // ======================================================
 
 function validarTipoUsuario() {
-    if (tipoUsuario.value === "") {
-        mostrarErro(
-            erroTipoUsuario,
-            tipoUsuario,
-            "Selecione um perfil de acesso válido."
-        );
+    const selecionado = document.querySelector('input[name="tipoUsuario"]:checked');
+
+    if (!selecionado) {
+        erroTipoUsuario.textContent = "Selecione um perfil de acesso válido.";
+        erroTipoUsuario.style.display = "block";
         return false;
     }
-    mostrarSucesso(tipoUsuario);
+
+    limparErro(erroTipoUsuario);
     return true;
 }
 
@@ -507,8 +507,10 @@ formCadastro.addEventListener("submit", async (event) => {
     }
 });
 
-document.addEventListener("DOMContentLoaded", listarUsuarios);
-
+document.addEventListener("DOMContentLoaded", async () => {
+    await carregarPerfis();
+    await listarUsuarios();
+});
 // ==========================================================
 // MOTOR DA BARRA DE FORÇA DE SENHA
 // ==========================================================
@@ -553,7 +555,33 @@ if (inputSenhaForca && barraDeForca) {
         }
     });
 }
+// ======================================================
+// PERFIS (busca dinâmica na API — evita IDs fixos no HTML)
+// ======================================================
+async function carregarPerfis() {
+    const container = document.getElementById("opcoesCargo");
+    if (!container) return;
 
+    try {
+        const resposta = await fetch(`${API_URL}/perfil`);
+        if (!resposta.ok) throw new Error("Não foi possível carregar os perfis.");
+
+        const perfis = await resposta.json();
+
+        container.innerHTML = "";
+        perfis.forEach((p) => {
+            const label = document.createElement("label");
+            label.innerHTML = `
+                <input type="radio" name="tipoUsuario" value="${p.id}" data-nome="${p.nome}" required>
+                ${p.nome}
+            `;
+            container.appendChild(label);
+        });
+    } catch (erro) {
+        container.innerHTML = "<p class='erro' style='display:block;'>Erro ao carregar os perfis.</p>";
+        console.error("Erro ao carregar perfis:", erro);
+    }
+}
 // ======================================================
 // TABELA E AÇÕES (CONECTADAS NA API)
 // ======================================================
@@ -628,24 +656,6 @@ window.deletarUsuario = async function(id) {
     }
 };
 
-// Quando clicar em DELETAR na tabela
-window.deletarUsuario = async function(id) {
-    if (confirm("Tem certeza que deseja excluir este colaborador definitivamente?")) {
-        try {
-            // Manda a ordem de DELETE para a rota correspondente ao UsuarioService.deletarUsuario
-            const resposta = await fetch(`${API_URL}/usuario/${id}`, { method: "DELETE" });
-            
-            if (resposta.ok) {
-                alert("Colaborador excluído com sucesso!");
-                listarUsuarios(); // Recarrega a tabela limpa
-            } else {
-                throw new Error("Erro ao excluir.");
-            }
-        } catch (erro) {
-            alert("Não foi possível excluir o colaborador.");
-        }
-    }
-};
 
 // Apenas UMA função de preparar edição (conectada ao seu Java)
 window.prepararEdicao = async function(id) {
@@ -669,7 +679,7 @@ window.prepararEdicao = async function(id) {
 
         // Marca o botão de rádio correto comparando com a String do Perfil vinda do Java DTO
         // Certifique-se de que o value no HTML seja exatamente igual ao que vem do banco (ex: "Administrador")
-        const radio = document.querySelector(`input[name="tipoUsuario"][value="${u.perfil}"]`);
+        const radio = document.querySelector(`input[name="tipoUsuario"][data-nome="${u.perfil}"]`);
         if (radio) radio.checked = true;
 
         // Avisa visualmente o botão que o modo atual mudou para edição
@@ -703,12 +713,3 @@ window.prepararEdicao = async function(id) {
     }
 };
 
-// Função para deletar colaborador
-window.deletarUsuario = function(index) {
-    if (confirm("Tem certeza que deseja excluir este colaborador?")) {
-        let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-        usuarios.splice(index, 1); // Remove do array
-        localStorage.setItem("usuarios", JSON.stringify(usuarios)); // Salva de volta
-        listarUsuarios(); // Atualiza a tabela
-    }
-};

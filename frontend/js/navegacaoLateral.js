@@ -8,6 +8,16 @@ function configurarMenuLateralDinamico() {
     const asideMenu = document.getElementById("menuLateral");
     if (!asideMenu) return;
 
+    // Descobre o perfil do usuário logado (mesmo padrão do auth.js)
+    const usuarioSalvo = localStorage.getItem("usuario");
+    const usuario = usuarioSalvo ? JSON.parse(usuarioSalvo) : null;
+    const ehAdministrador = usuario && usuario.perfil === "Administrador";
+
+    // Item "Colaboradores" só entra no HTML se for Administrador
+    const itemColaboradores = ehAdministrador
+        ? '<li data-url="ADMcadastro.html"><i class="fa-solid fa-user-plus"></i> Colaboradores</li>'
+        : '';
+
     // Injeta a lista padrão de módulos que todas as telas usam
     asideMenu.innerHTML = `
         <ul style="list-style: none; padding: 0; margin: 0;">
@@ -16,7 +26,7 @@ function configurarMenuLateralDinamico() {
             <li data-url="receitas.html"><i class="fa-solid fa-receipt"></i> Receitas</li>
             <li data-url="estoque.html"><i class="fa-solid fa-cubes-stacked"></i> Estoque</li>
             <li data-url="testes.html"><i class="fa-solid fa-vial"></i> Testes</li>
-            <li data-url="ADMcadastro.html"><i class="fa-solid fa-user-plus"></i> Colaboradores</li>
+            ${itemColaboradores}
         </ul>
     `;
 
