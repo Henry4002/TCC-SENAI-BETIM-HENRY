@@ -34,8 +34,7 @@ public class AuthService {
                 usuario.getId(),
                 "Login realizado com sucesso!",
                 usuario.getNome(),
-                usuario.getPerfil().getNome(),
-                usuario.getAtualizadoEm() != null ? usuario.getAtualizadoEm().toString() : null
+                usuario.getPerfil().getNome()
         );
     }
 

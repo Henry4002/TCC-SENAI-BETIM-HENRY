@@ -29,7 +29,6 @@ const btnCadastrar = document.getElementById("btnCadastrar");
 
 
 
-
 // ======================================================
 // FUNÇÕES AUXILIARES
 // ======================================================
@@ -511,6 +510,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await carregarPerfis();
     await listarUsuarios();
 });
+
 // ==========================================================
 // MOTOR DA BARRA DE FORÇA DE SENHA
 // ==========================================================
