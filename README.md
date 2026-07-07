@@ -58,8 +58,8 @@ OneMonth
 │
 ├── backend/          # Código-fonte da API REST
 ├── frontend/         # Interface do sistema
-├── database/         # Script SQL, DER e Dicionário de Dados
-├── docs/             # Documentação do projeto
+├── database/         # Script SQL e Dicionário de Dados
+├── docs/             # Documentação do projeto e diagramas do banco de dados
 └── README.md
 ```
 
